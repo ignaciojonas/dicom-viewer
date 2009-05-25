@@ -39,62 +39,62 @@ public class EnlargeCircle extends Thread{
 		int y = point2.y - point1.y;
 		return Math.sqrt(x*x + y*y);
 	}
-	private void enlargePoint2(Point p1,Point p2,Point p3){
-		Point set = new Point (p2.x,p2.y);
-		int color = image.getRGB(p2.x,p2.y);
-		int newColor = color;
-		Point normal= getVectorNormal(p1,p2,p3);
-		if((normal.x!=0)||(normal.y!=0)){
-			boolean toLong=false;
-			Point ant = null;
-			Line antL = null;
-			if(normales.size()>0){
-				ant = newCircle.get(newCircle.size()-1);
-				antL= normales.get(normales.size()-1);
-			}
-			int count=0;
-			
-			while ((color==newColor)&&(!toLong)){	
-				set.y+=normal.y;
-				set.x+=normal.x;
-				count++;
-				normal = getVectorNormal(p1,set,p3);
-				if ((count>40)&&(ant!=null)&&(getDistance(p2, set)>20)){
-					toLong=true;
-					set = getAdd(p2,antL,normal);
-				}
-			
-				try{
-					newColor = image.getRGB(set.x,set.y);
-				}catch (Exception e){
-					newColor = color-1;
-				}
-				if(color!=newColor){
-					
-					if((antL!=null)&&((antL.getSize()- getDistance(p2, set))>10)&&((antL.getSize()- getDistance(p2, set))<60)){
-						color=newColor;
-						
-						while ((color==newColor)){
-							set.y+=normal.y;
-							set.x+=normal.x;
-							count++;
-							normal = getVectorNormal(p1,set,p3);
-							try{
-								newColor = image.getRGB(set.x,set.y);
-							}catch (Exception e){
-								newColor = color-1;
-							}
-						}
-						color=newColor;		
-					}
-				}
-			}
-		}
-
-		newCircle.add(set);
-		normales.add(new Line(p2,set));
-		
-	}
+//	private void enlargePoint2(Point p1,Point p2,Point p3){
+//		Point set = new Point (p2.x,p2.y);
+//		int color = image.getRGB(p2.x,p2.y);
+//		int newColor = color;
+//		Point normal= getVectorNormal(p1,p2,p3);
+//		if((normal.x!=0)||(normal.y!=0)){
+//			boolean toLong=false;
+//			Point ant = null;
+//			Line antL = null;
+//			if(normales.size()>0){
+//				ant = newCircle.get(newCircle.size()-1);
+//				antL= normales.get(normales.size()-1);
+//			}
+//			int count=0;
+//			
+//			while ((color==newColor)&&(!toLong)){	
+//				set.y+=normal.y;
+//				set.x+=normal.x;
+//				count++;
+//				normal = getVectorNormal(p1,set,p3);
+//				if ((count>40)&&(ant!=null)&&(getDistance(p2, set)>20)){
+//					toLong=true;
+//					set = getAdd(p2,normal);
+//				}
+//			
+//				try{
+//					newColor = image.getRGB(set.x,set.y);
+//				}catch (Exception e){
+//					newColor = color-1;
+//				}
+//				if(color!=newColor){
+//					
+//					if((antL!=null)&&((antL.getSize()- getDistance(p2, set))>10)&&((antL.getSize()- getDistance(p2, set))<60)){
+//						color=newColor;
+//						
+//						while ((color==newColor)){
+//							set.y+=normal.y;
+//							set.x+=normal.x;
+//							count++;
+//							normal = getVectorNormal(p1,set,p3);
+//							try{
+//								newColor = image.getRGB(set.x,set.y);
+//							}catch (Exception e){
+//								newColor = color-1;
+//							}
+//						}
+//						color=newColor;		
+//					}
+//				}
+//			}
+//		}
+//
+//		newCircle.add(set);
+//		normales.add(new Line(p2,set));
+//		
+//	}
 	
 	
 	
@@ -108,16 +108,21 @@ public class EnlargeCircle extends Thread{
 		Vector<Point> blackPoints = new Vector<Point>();
 		Point ant = null;
 		Line antL = null;
+		
+		
+		//caso particular
+		if((p2.x==257)&&(p2.y==78)){
+			System.out.println("lalal");
+		}
 		if((normal.x!=0)||(normal.y!=0)){
-			if(normales.size()>0){
+			if(newCircle.size()>0){
 				ant = newCircle.get(newCircle.size()-1);
-				antL= normales.get(normales.size()-1);
 			}
 			
 			while ((color==newColor)&&(!stop)){	
 				set.y+=normal.y;
 				set.x+=normal.x;
-				normal = getVectorNormal(p1,set,p3);
+				//normal = getVectorNormal(p1,set,p3);
 				try{
 					newColor = image.getRGB(set.x,set.y);
 				}catch (Exception e){
@@ -131,7 +136,7 @@ public class EnlargeCircle extends Thread{
 					while ((color==newColor)&&(!stop)){
 						set.y+=normal.y;
 						set.x+=normal.x;
-						normal = getVectorNormal(p1,set,p3);
+						//normal = getVectorNormal(p1,set,p3);
 						try{
 							newColor = image.getRGB(set.x,set.y);
 						}catch (Exception e){
@@ -143,17 +148,17 @@ public class EnlargeCircle extends Thread{
 				
 			}
 		}
-		set = selectPoint(ant,antL,blackPoints,p2,normal);
+		set = selectPoint(ant,blackPoints,p2,normal);
 		newCircle.add(set);
 		normales.add(new Line(p2,set));
 		
 	}
 
-	private Point selectPoint(Point ant, Line antL, Vector<Point> blackPoints,Point p2,Point normal) {
+	private Point selectPoint(Point ant, Vector<Point> blackPoints,Point p2,Point normal) {
 		if(ant==null)
 			return blackPoints.get(0);
 		
-		Point ret = getAdd(p2, antL, normal);
+		Point ret = getAdd(p2,normal);
 		
 		double dist;
 		double distMin=Double.MAX_VALUE;
@@ -172,24 +177,41 @@ public class EnlargeCircle extends Thread{
 //			System.out.println("Le sumoooo");
 //			}
 //		}
-		if((Math.abs(getDistance(p2, ret)- antL.getSize())>18)){//||Math.abs(getDistance(p2, ret)-antL.getSize())<5){
-			ret = getAdd(p2, antL, normal);
-			
+		//ACA si la distancia es mucha, entonces le pongo el anterior en la direccion de la normal
+		if((Math.abs(getDistance(p2, ret))>50)){//||Math.abs(getDistance(p2, ret)-antL.getSize())<5){
+			Line l=normales.get(normales.size()-1);
+			ret=p2;
+			double sizeL=l.getSize();
+			double sizeN=getDistance(p2, ret);
+			while(sizeN<=sizeL){
+				ret = getAdd(ret, normal);
+				sizeN=getDistance(p2, ret);
+			}
+//			
+		}
+		//ACA si no existe ningun negro, entonces le pongo el anterior  en la direccion de la normal
+		if((blackPoints.size()==0)){//||Math.abs(getDistance(p2, ret)-antL.getSize())<5){
+			Line l=normales.get(normales.size()-1);
+			ret=p2;
+			double sizeL=l.getSize();
+			double sizeN=getDistance(p2, ret);
+			while(sizeN<=sizeL){
+				ret = getAdd(ret, normal);
+				sizeN=getDistance(p2, ret);
+			}
+//			
 		}
 			
 		return ret;
 		
 	}
-	private Point getAdd(Point set, Line antL, Point normal) {
+	private Point getAdd(Point set, Point normal) {
 		Point ret = new Point();
 		ret.x=set.x;
 		ret.y=set.y;
-		int l = (int) antL.getSize();
-		while (l>0){
-			ret.x+=normal.x;
-			ret.y+=normal.y;
-			l--;
-		}
+		ret.x+=normal.x;
+		ret.y+=normal.y;
+		
 		return ret;
 	}
 	private Point enlarge(Point p1,Point p2,Point p3){
