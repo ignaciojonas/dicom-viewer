@@ -250,15 +250,18 @@ public class OpenGLCanvas extends Scene
 		gl.glStencilFunc(GL.GL_EQUAL,1 , 1);					
 		gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_KEEP);		
 		
-		gl.glPushMatrix();
-			gl.glScalef(1.0f, -1.0f, 1.0f);		//Mirror Y
-			drawObjects(glDrawable);
-			drawTriangles();
-		gl.glPopMatrix();
-		gl.glDisable(GL.GL_STENCIL_TEST);
+//		gl.glPushMatrix();
+//			gl.glScalef(1.0f, -1.0f, 1.0f);		//Mirror Y
+//			drawObjects(glDrawable);
+//			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, Setup3D.lightPosition0);
+//	        gl.glEnable(GL.GL_LIGHTING);   
+//	        drawTriangles();
+//	        gl.glDisable(GL.GL_LIGHTING);
+//		gl.glPopMatrix();
+//		gl.glDisable(GL.GL_STENCIL_TEST);
 
 		/* Draw the ground */
-		drawGround(gl);
+		//drawGround(gl);
 		
 		drawObjects(glDrawable);
 	
@@ -296,10 +299,10 @@ public class OpenGLCanvas extends Scene
 		gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, zero);
 		gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, one);
 		gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR, one);		//Default value for GL_LIGHT0 
-		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, position);
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, Setup3D.lightPosition0);
 		
 		//light model properties
-		float[] model_ambient = {0.4f, 0.4f, 0.4f, 1.0f};						//0=2sided, 1=1sided
+		float[] model_ambient = {1.4f, 0.4f, 0.4f, 1.0f};						//0=2sided, 1=1sided
 
 		gl.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT, model_ambient);				//small white ambient light
 	
@@ -330,27 +333,12 @@ public class OpenGLCanvas extends Scene
 		gl.glTranslatef(objectPosition[0], objectPosition[1], objectPosition[2]+zOffset);
 		
 		gl.glBegin(GL.GL_TRIANGLES);
-		
 		 gl.glPushMatrix();
 	       	gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, Setup3D.lightPosition0);
-	       
 	        gl.glEnable(GL.GL_LIGHTING);   
 	        	drawMesh();
-	    		
-//				 gl.glVertex3f( 0.0f, 1.0f, 0.0f);    //V0(red)
-//				 gl.glVertex3f(-1.0f,-1.0f, 1.0f);    //V1(green)
-//				gl.glVertex3f( 1.0f,-1.0f, 1.0f);    //V2(blue)
-//				
-//				gl.glVertex3f( 1.0f,-1.0f,-1.0f);    //V3(green)
-//				 gl.glVertex3f(-1.0f,-1.0f,-1.0f);    //V4(blue)
-//				 gl.glVertex3f(-1.0f,-1.0f, 1.0f);    //V1(green)
-//				 
-//				 this.drawCube(gl, 5);
 			 gl.glDisable(GL.GL_LIGHTING);
 	    gl.glPopMatrix();
-	    
-	
-
 		gl.glEnd();
 		
 	//Enable the first light ang thelighting mode

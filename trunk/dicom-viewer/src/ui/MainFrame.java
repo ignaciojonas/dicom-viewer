@@ -55,8 +55,10 @@ import data.io.Encoder;
 import data.io.LoadFile;
 import data.io.SaveFile;
 import data.io.SaveFilteredImages;
+import draw3D.Mesh;
 import draw3D.OpenGLCanvas;
 import draw3D.Setup3D;
+import draw3D.scenario.screen.Point3D;
 import filtering.EnlargeCircle;
 import filtering.MeanFilter;
 
@@ -101,10 +103,13 @@ public class MainFrame extends javax.swing.JFrame {
 	private JLabel jLabelXY;
 	private JSeparator jSeparator6;
 	private JMenuItem jMenuItemEnlargeCircle;
+	private JMenuItem jMenuItemEnlargeCircleforAll;
+	private JMenuItem jMenuItemGenerateMesh;
 	private JLabel jLabelNameImage;
 	private JMenuItem jMenuItemDCircle;
 	private JMenuItem jMenuItemPrue;
 	private JCheckBoxMenuItem jCheckBoxMenuItemCircle;
+	private JCheckBoxMenuItem jCheckBoxMenuItemCircleAll;
 	private JMenuItem jMenuItemOpenDir;
 	private JMenuItem jMenuItemSaveFilters;
 	private JButton jButtonBack;
@@ -127,6 +132,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private JMenuItem saveMenuItem;
 	private JButton jButtonPlay;
 	private JMenu jMenuFilter;
+	private JMenu jMenu3D;
 	public JScrollPane jScrollPaneFilter;
 	private JSeparator jSeparator5;
 	private JInternalFrame jInternalFrame3D;
@@ -606,20 +612,7 @@ public class MainFrame extends javax.swing.JFrame {
 							});
 						
 						}
-						{
-							load3DMenuItem = new JMenuItem();
-							
-							jMenu5.add(load3DMenuItem);
-							load3DMenuItem.setText("Load 3D");
-							
-							load3DMenuItem.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/load3D.gif")));
-							load3DMenuItem.addActionListener(new ActionListener() {
-								public void actionPerformed(ActionEvent evt) {
-									load3DMenuItemActionPerformed(evt);
-								}
-							});
 						
-						}
 						
 				}
 
@@ -673,6 +666,18 @@ public class MainFrame extends javax.swing.JFrame {
 						jCheckBoxMenuItemCircle.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
 								viewCircleMenuItemActionPerformed(evt);
+							}
+
+						});
+					}
+					{
+						jCheckBoxMenuItemCircleAll = new JCheckBoxMenuItem();
+						jMenu4.add(jCheckBoxMenuItemCircleAll);
+						jCheckBoxMenuItemCircleAll.setText("View All Circles");
+						jCheckBoxMenuItemCircleAll.setSelected(true);
+						jCheckBoxMenuItemCircleAll.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								viewCircleAllMenuItemActionPerformed(evt);
 							}
 
 						});
@@ -836,6 +841,54 @@ public class MainFrame extends javax.swing.JFrame {
 								}
 							});
 						}
+				}
+				{
+					jMenu3D = new JMenu();
+					jMenuBar1.add(jMenu3D);
+					jMenu3D.setText("3D");
+					
+					{
+						jMenuItemEnlargeCircleforAll = new JMenuItem();
+						jMenu3D.add(jMenuItemEnlargeCircleforAll);
+						jMenuItemEnlargeCircleforAll.setText("Enlarge Circle for All");
+						jMenuItemEnlargeCircleforAll.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/enlarge.gif")));
+						
+						jMenuItemEnlargeCircleforAll.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								jMenuItemEnlargeCircleforAllActionPerformed(evt);
+								jMenuItemGenerateMesh.setEnabled(true);
+							}
+
+						
+						});
+					}
+					{
+						jMenuItemGenerateMesh = new JMenuItem();
+						jMenu3D.add(jMenuItemGenerateMesh);
+						jMenuItemGenerateMesh.setText("Generate Mesh");
+						jMenuItemGenerateMesh.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/enlarge.gif")));
+						jMenuItemGenerateMesh.setEnabled(false);
+						jMenuItemGenerateMesh.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								handImage.generateMesh();
+								load3DMenuItem.setEnabled(true);
+							}
+						});
+					}
+					{
+						load3DMenuItem = new JMenuItem();
+						load3DMenuItem.setEnabled(false);
+						jMenu3D.add(load3DMenuItem);
+						load3DMenuItem.setText("Load 3D");
+						
+						load3DMenuItem.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/load3D.gif")));
+						load3DMenuItem.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								load3DMenuItemActionPerformed(evt);
+							}
+						});
+					
+					}
 				}
 				{
 					jMenu5 = new JMenu();
@@ -1175,11 +1228,17 @@ public class MainFrame extends javax.swing.JFrame {
 	private void viewSeedsMenuItemActionPerformed(ActionEvent evt) {
 		
 		VisualData.viewSeeds=jCheckBoxMenuItemSeeds.isSelected();
-		
+		handImage.setImage();
 	}
 	private void viewCircleMenuItemActionPerformed(ActionEvent evt) {
 		
 		VisualData.viewCircle=jCheckBoxMenuItemCircle.isSelected();
+		handImage.setImage();
+	}
+	private void viewCircleAllMenuItemActionPerformed(ActionEvent evt) {
+		
+		VisualData.viewCircleAll=jCheckBoxMenuItemCircleAll.isSelected();
+		handImage.setImage();
 		
 	}
 	
@@ -1232,7 +1291,14 @@ public class MainFrame extends javax.swing.JFrame {
 	private void jMenuItemEnlargeCircleActionPerformed(ActionEvent evt) {
 		
 		EnlargeCircle e = new EnlargeCircle(handImage,1,handImage.getImage(),handImage.getCirclePoints());
-		e.start();
+		e.run();
+		if (handImage!=null){
+			handImage.setNormales(e.getNormales());
+			handImage.setCirclePointsEnlarge(e.getNewCircle());
+			handImage.setImage();
+		
+		}
+		
 		
 	}
 	
@@ -1280,4 +1346,11 @@ public class MainFrame extends javax.swing.JFrame {
 		}
 		
 	}
+	private void jMenuItemEnlargeCircleforAllActionPerformed(ActionEvent evt) {
+		
+		handImage.enlargeCircleForAll();
+		
+	}
+	
+	
 }

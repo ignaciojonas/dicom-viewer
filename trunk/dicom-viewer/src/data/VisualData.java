@@ -21,6 +21,7 @@ public class VisualData {
 	public static  boolean viewDicomProperties = false;
 	public static  boolean viewSeeds = true;
 	public static  boolean viewCircle = true;
+	public static boolean viewCircleAll = true;
 
 /*	
 	public static void setjLabelFPS(String text){

@@ -20,7 +20,7 @@ import sun.security.provider.certpath.Vertex;
 import ui.HandImage;
 import ui.MainFrame;
 
-public class EnlargeCircle extends Thread{
+public class EnlargeCircle {
 	
 	int radio;
 	BufferedImage image;
@@ -29,6 +29,12 @@ public class EnlargeCircle extends Thread{
 	Vector<Point> newCircle = new Vector<Point>();
 	Vector<Line> normales = new Vector<Line>();
 
+	public Vector<Point> getNewCircle() {
+		return newCircle;
+	}
+	public Vector<Line> getNormales() {
+		return normales;
+	}
 	public EnlargeCircle(HandImage handImage, int radio,BufferedImage image,Vector<Point> points) {
 		this.radio=radio;
 		this.image=image;
@@ -177,7 +183,7 @@ public class EnlargeCircle extends Thread{
 	}
 
 
-	public void run(){
+	public Vector<Point> run(){
 
 		
 		Point normal=null;
@@ -203,13 +209,10 @@ public class EnlargeCircle extends Thread{
 					
 					
 				}
+
+			return newCircle;
 			
-			
-			if (handImage!=null){
-				handImage.setNormales(normales);
-				handImage.setCirclePointsEnlarge(newCircle);
-				handImage.setImage();
-				}
+
 		}
 	
 	public Point getNormal(Point p1,Point p2){

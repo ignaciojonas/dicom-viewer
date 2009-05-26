@@ -16,6 +16,9 @@ import data.ImagesData;
 import data.VisualData;
 import data.io.DicomProperties;
 import draw3D.Line;
+import draw3D.Mesh;
+import draw3D.scenario.screen.Point3D;
+import filtering.EnlargeCircle;
 
 
 
@@ -29,6 +32,8 @@ public class HandImage extends JPanel{
  private Vector<Point> circlePointsEnlarge = new Vector<Point>();
  private Vector<BufferedImage> imagesB = new Vector<BufferedImage>();
  private Vector<Line> normales = new Vector<Line>();
+ private Vector<Vector> circleAllPointsEnlarge = new Vector<Vector>();
+ 
  private int index;
   private BufferedImage image = null;
 
@@ -272,6 +277,39 @@ private void drawEnlargeCircle(Graphics g){
 		}
 	}
 }
+private void drawEnlargeCircle(Graphics g,int index){
+	if ((VisualData.viewCircleAll)&&(circleAllPointsEnlarge.size()>0)){
+		
+		
+		int x=0;
+		int y=0;
+		int x2=0;
+		int y2=0;
+		
+		Vector<Point> circ = circleAllPointsEnlarge.get(index);
+		for (int i = 0; i < circ.size(); i++) {
+			
+			g.setColor(Color.GREEN);
+			Point p = circ.get(i);
+			x=(int) p.getX();
+			y=(int) p.getY();
+			if(i==(circ.size()-1)){
+				Point p2 = circ.get(0);
+				x2=(int) p2.getX();
+				y2=(int) p2.getY();
+			}else{
+				if(circ.size()>1){
+					Point p2 = circ.get(i+1);
+					x2=(int) p2.getX();
+					y2=(int) p2.getY();
+				}
+			}
+			
+			g.fillOval(x-3,y-3, 7, 7);
+			g.drawLine(x, y, x2, y2);
+		}
+	}
+}
 private void drawCircle(Graphics g){
 	if (VisualData.viewCircle){
 		int x=0;
@@ -307,6 +345,7 @@ public void update (Graphics g){
 	g.drawImage(image, 0, 0, this);
 	drawSeeds(g);
 	drawEnlargeCircle(g);
+	drawEnlargeCircle(g,index);
 	drawCircle(g);
 }
 
@@ -324,15 +363,17 @@ public void setImage() {
 		if(aux>1)
 		VisualData.setjLabelNameImage(ImagesData.imagesBFilteredName.get(index));}
 	catch (Exception e){
-		System.out.println("Error name");
+//		System.out.println("Error name");
 	}
 	if(imagesB.size()>0){
 		this.image = imagesB.elementAt(index);
 		Graphics g= this.getGraphics();
-		g.drawImage(image, 0, 0, null);}
+		g.drawImage(image, 0, 0, null);
+		}
 	drawSeeds(this.getGraphics());
 	
 	drawEnlargeCircle(this.getGraphics());
+	drawEnlargeCircle(this.getGraphics(),index);
 	drawCircle(this.getGraphics());
 }
 
@@ -371,6 +412,62 @@ public void deleteSeeds() {
 	seeds=new Vector<Point>();
 	this.setImage();
 	
+}
+public void enlargeCircleForAll(){
+	for(int i=0;i<imagesB.size();i++){
+		EnlargeCircle e = new EnlargeCircle(this,1,imagesB.get(i),this.getCirclePoints());
+		circleAllPointsEnlarge.add(e.run());
+	}
+}
+
+public void generateMesh(){
+	Mesh mesh = new Mesh();
+	
+	
+//	Vector<Point> vP = handImage.getCirclePoints();
+//	Vector<Point3D> v1 = new Vector<Point3D>();
+//	Vector<Point3D> v2 = new Vector<Point3D>();
+//	
+//	for (int i = 0;i<vP.size();i++){
+//		Point p= vP.get(i);
+//		v1.add(new Point3D(p.x/div, p.y/div, 0.0f));
+//		v2.add(new Point3D(p.x/div, p.y/div, 6.0f));
+//	}
+	
+//	float div= 90.0f;
+//	float dist = 0.0f;
+//	Vector<Point3D> vv1 = new Vector<Point3D>();
+//	Vector<Point3D> vv2 = new Vector<Point3D>();
+//	Vector<Point> v1 = circleAllPointsEnlarge.get(1);
+//	Vector<Point> v2 = circleAllPointsEnlarge.get(2);
+//	for (int j = 0;j<v1.size();j++){
+//		Point p = v1.get(j);
+//		vv1.add(new Point3D(p.x/div, p.y/div, dist));
+//		
+//		Point p2 = v2.get(j);
+//		vv2.add(new Point3D(p2.x/div, p2.y/div, 6.0f));
+//		dist+=0.2f;
+//	}
+//	Mesh.addTriangles(vv1,vv2);
+	
+	int size = circleAllPointsEnlarge.size();
+	float div= 90.0f;
+	float dist = 0.0f;
+	Vector<Point3D> vv1 = new Vector<Point3D>();
+	Vector<Point3D> vv2 = new Vector<Point3D>();
+	for (int i = 0;i<size-1;i++){
+		Vector<Point> v1 = circleAllPointsEnlarge.get(i);
+		Vector<Point> v2 = circleAllPointsEnlarge.get(i+1);
+		for (int j = 0;j<v1.size();j++){
+			Point p = v1.get(j);
+			vv1.add(new Point3D(p.x/div, p.y/div, dist));
+			Point p2 = v2.get(j);
+			vv2.add(new Point3D(p2.x/div, p2.y/div, dist+0.3f));
+		
+		}
+		dist+=0.3f;
+		Mesh.addTriangles(vv1,vv2);
+	}	
 }
 
 
