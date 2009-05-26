@@ -39,6 +39,11 @@ public class Point3D {
 	public void setZ(float z) {
 		this.z = z;
 	}
+
+	public String toSUR() {
+		
+		return x+" "+y+" "+z;
+	}
 	
 	
 	

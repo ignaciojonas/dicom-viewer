@@ -55,6 +55,7 @@ import data.io.Encoder;
 import data.io.LoadFile;
 import data.io.SaveFile;
 import data.io.SaveFilteredImages;
+import data.io.SaveMeshSur;
 import draw3D.Mesh;
 import draw3D.OpenGLCanvas;
 import draw3D.Setup3D;
@@ -151,6 +152,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private JMenuItem jMenuItemDMalla;
 	private JMenuItem jMenuItemOpenMalla;
 	private JMenuItem jMenuItemDSeeds;
+	private JMenuItem jMenuItemSaveMesh;
 	private JMenu jMenu3;
 	private JMenuBar jMenuBar1;
 	private ThreadPlay tP=null;
@@ -889,6 +891,24 @@ public class MainFrame extends javax.swing.JFrame {
 						});
 					
 					}
+					{
+						jSeparator1 = new JSeparator();
+						jMenu3D.add(jSeparator1);
+					}
+					{
+						jMenuItemSaveMesh = new JMenuItem();
+						jMenu3D.add(jMenuItemSaveMesh);
+						jMenuItemSaveMesh.setText("Save Mesh .Sur");
+						jMenuItemSaveMesh.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/savecircle.gif")));
+						
+						jMenuItemSaveMesh.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								saveMeshActionPerformed(evt);
+							}
+
+						
+						});
+					}
 				}
 				{
 					jMenu5 = new JMenu();
@@ -1326,6 +1346,29 @@ public class MainFrame extends javax.swing.JFrame {
 			}
 			SaveFile sv=new SaveFile(file.getAbsolutePath());
 			sv.save(handImage.getCirclePoints());
+		}
+		
+	}
+	
+	private void saveMeshActionPerformed(ActionEvent evt) {
+		filechooser = new JFileChooser(new File("c:\\"));
+		filechooser.setMultiSelectionEnabled(false);
+		FFilter crlFilter; 
+		File file;
+		crlFilter = new FFilter("sur", "SUR Files");
+		filechooser.addChoosableFileFilter(crlFilter);
+		filechooser.setAcceptAllFileFilterUsed(true);
+		filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		if (filechooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+			file=filechooser.getSelectedFile();
+			if(file.exists()){
+				int response=JOptionPane.showConfirmDialog(null,"Overwrite existing file?","Confirm Overwrite",JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
+				if(response==JOptionPane.CANCEL_OPTION){
+					return;
+				}
+			}
+			SaveMeshSur sv=new SaveMeshSur(file.getAbsolutePath());
+			sv.save();
 		}
 		
 	}

@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.PrintWriter;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -465,33 +466,6 @@ public void enlargeCircleForAll(){
 public void generateMesh(){
 	Mesh mesh = new Mesh();
 	
-	
-//	Vector<Point> vP = handImage.getCirclePoints();
-//	Vector<Point3D> v1 = new Vector<Point3D>();
-//	Vector<Point3D> v2 = new Vector<Point3D>();
-//	
-//	for (int i = 0;i<vP.size();i++){
-//		Point p= vP.get(i);
-//		v1.add(new Point3D(p.x/div, p.y/div, 0.0f));
-//		v2.add(new Point3D(p.x/div, p.y/div, 6.0f));
-//	}
-	
-//	float div= 90.0f;
-//	float dist = 0.0f;
-//	Vector<Point3D> vv1 = new Vector<Point3D>();
-//	Vector<Point3D> vv2 = new Vector<Point3D>();
-//	Vector<Point> v1 = circleAllPointsEnlarge.get(1);
-//	Vector<Point> v2 = circleAllPointsEnlarge.get(2);
-//	for (int j = 0;j<v1.size();j++){
-//		Point p = v1.get(j);
-//		vv1.add(new Point3D(p.x/div, p.y/div, dist));
-//		
-//		Point p2 = v2.get(j);
-//		vv2.add(new Point3D(p2.x/div, p2.y/div, 6.0f));
-//		dist+=0.2f;
-//	}
-//	Mesh.addTriangles(vv1,vv2);
-	
 	int size = circleAllPointsEnlarge.size();
 	float div= 90.0f;
 	float dist = 0.0f;
@@ -511,6 +485,8 @@ public void generateMesh(){
 		Mesh.addTriangles(vv1,vv2);
 	}	
 }
+
+
 
 
 }

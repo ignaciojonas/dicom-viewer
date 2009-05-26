@@ -29,4 +29,14 @@ public class Triangle3D {
 		gl.glVertex3f( v1.getX(),v1.getY(),v1.getZ());
 		gl.glVertex3f( v2.getX(),v2.getY(),v2.getZ());
 	}
+	public String getSUR(int num1, int num2, int num3){
+		String ret="";
+		ret+=" "+num1+" "+v0.getX()+" "+v0.getY()+" "+v0.getZ()+"\n";
+	
+		ret+=" "+num2+" "+v1.getX()+" "+v1.getY()+" "+v1.getZ()+"\n";
+	
+		ret+=" "+num3+" "+v2.getX()+" "+v2.getY()+" "+v2.getZ()+"\n";
+		return ret;
+		
+	}
 }

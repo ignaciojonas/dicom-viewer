@@ -323,29 +323,30 @@ public class OpenGLCanvas extends Scene
 	float[] mat_emission = {0.3f, 0.2f, 0.2f, 0.0f};
 	
 	public void drawTriangles(){
-//		if(Setup3D.enableLight0)
-//			gl.glEnable(GL.GL_LIGHT0);
-//		if(Setup3D.enableLight1)
-//			gl.glEnable(GL.GL_LIGHT1);
-//		if(Setup3D.enableLight2)
-//			gl.glEnable(GL.GL_LIGHT2);
-//		gl.glEnable(GL.GL_LIGHTING);
+		if(Setup3D.enableLight0)
+			gl.glEnable(GL.GL_LIGHT0);
+		if(Setup3D.enableLight1)
+			gl.glEnable(GL.GL_LIGHT1);
+		if(Setup3D.enableLight2)
+			gl.glEnable(GL.GL_LIGHT2);
+		gl.glEnable(GL.GL_LIGHTING);
 		gl.glTranslatef(objectPosition[0], objectPosition[1], objectPosition[2]+zOffset);
 		
 		gl.glBegin(GL.GL_TRIANGLES);
 		 gl.glPushMatrix();
 	       	gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, Setup3D.lightPosition0);
 	        gl.glEnable(GL.GL_LIGHTING);   
+	       
 	        	drawMesh();
 			 gl.glDisable(GL.GL_LIGHTING);
 	    gl.glPopMatrix();
 		gl.glEnd();
 		
 	//Enable the first light ang thelighting mode
-//	gl.glDisable(GL.GL_LIGHT2);
-//	gl.glDisable(GL.GL_LIGHT1);
-//	gl.glDisable(GL.GL_LIGHT0);
-//	gl.glDisable(GL.GL_LIGHTING);
+	gl.glDisable(GL.GL_LIGHT2);
+	gl.glDisable(GL.GL_LIGHT1);
+	gl.glDisable(GL.GL_LIGHT0);
+	gl.glDisable(GL.GL_LIGHTING);
 	}
 	
 	
