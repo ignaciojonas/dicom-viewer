@@ -1295,6 +1295,7 @@ public class MainFrame extends javax.swing.JFrame {
 		if (handImage!=null){
 			handImage.setNormales(e.getNormales());
 			handImage.setCirclePointsEnlarge(e.getNewCircle());
+			handImage.setCirclePointsReduce(e.getReduceCircle());
 			handImage.setImage();
 		
 		}

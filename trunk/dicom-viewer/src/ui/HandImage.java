@@ -30,9 +30,12 @@ public class HandImage extends JPanel{
  private Vector<Point> seeds = new Vector<Point>();
  private Vector<Point> circlePoints = new Vector<Point>();
  private Vector<Point> circlePointsEnlarge = new Vector<Point>();
+ private Vector<Point> circlePointsReduce = new Vector<Point>();
  private Vector<BufferedImage> imagesB = new Vector<BufferedImage>();
  private Vector<Line> normales = new Vector<Line>();
  private Vector<Vector> circleAllPointsEnlarge = new Vector<Vector>();
+ private Vector<Vector> circleAllPointsReduce = new Vector<Vector>();
+ 
  
  private int index;
   private BufferedImage image = null;
@@ -46,6 +49,9 @@ public class HandImage extends JPanel{
  
     public void setCirclePointsEnlarge(Vector<Point> circlePointsEnlarge) {
 		this.circlePointsEnlarge = circlePointsEnlarge;
+	}
+    public void setCirclePointsReduce(Vector<Point> circlePointsReduce) {
+		this.circlePointsReduce = circlePointsReduce;
 	}
     public void setNormales(Vector<Line> normales) {
 		this.normales = normales;
@@ -74,6 +80,7 @@ public void deleteCircle(){
 
 	circlePoints = new Vector<Point>();
 	circlePointsEnlarge = new Vector<Point>();
+	circlePointsReduce = new Vector<Point>();
 	normales=new Vector<Line>();
 	this.setImage();
 }
@@ -277,6 +284,38 @@ private void drawEnlargeCircle(Graphics g){
 		}
 	}
 }
+
+private void drawReduceCircle(Graphics g){
+	if (VisualData.viewCircle){
+		
+		int x=0;
+		int y=0;
+		int x2=0;
+		int y2=0;
+		for (int i = 0; i < circlePointsReduce.size(); i++) {
+			
+			g.setColor(Color.CYAN);
+			Point p = circlePointsReduce.get(i);
+			x=(int) p.getX();
+			y=(int) p.getY();
+			if(i==(circlePointsReduce.size()-1)){
+				Point p2 = circlePointsReduce.get(0);
+				x2=(int) p2.getX();
+				y2=(int) p2.getY();
+			}else{
+				if(circlePointsReduce.size()>1){
+					Point p2 = circlePointsReduce.get(i+1);
+					x2=(int) p2.getX();
+					y2=(int) p2.getY();
+				}
+			}
+			
+			g.fillOval(x-3,y-3, 7, 7);
+			g.drawLine(x, y, x2, y2);
+		}
+	}
+}
+
 private void drawEnlargeCircle(Graphics g,int index){
 	if ((VisualData.viewCircleAll)&&(circleAllPointsEnlarge.size()>0)){
 		
@@ -347,6 +386,7 @@ public void update (Graphics g){
 	drawEnlargeCircle(g);
 	drawEnlargeCircle(g,index);
 	drawCircle(g);
+	drawReduceCircle(g);
 }
 
 
@@ -375,6 +415,7 @@ public void setImage() {
 	drawEnlargeCircle(this.getGraphics());
 	drawEnlargeCircle(this.getGraphics(),index);
 	drawCircle(this.getGraphics());
+	drawReduceCircle(this.getGraphics());
 }
 
 public void nextImage(){
@@ -405,7 +446,6 @@ public BufferedImage getImage() {
 }
 
 public Vector<Point> getSeedsVector() {
-	// TODO Auto-generated method stub
 	return seeds;
 }
 public void deleteSeeds() {
@@ -414,6 +454,8 @@ public void deleteSeeds() {
 	
 }
 public void enlargeCircleForAll(){
+//	EnlargeCircle en = new EnlargeCircle(this,1,imagesB.get(0),this.getCirclePoints());
+//	Vector init=en.run();
 	for(int i=0;i<imagesB.size();i++){
 		EnlargeCircle e = new EnlargeCircle(this,1,imagesB.get(i),this.getCirclePoints());
 		circleAllPointsEnlarge.add(e.run());

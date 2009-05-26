@@ -43,6 +43,8 @@ public class ImagesData {
 	public static Vector<String> imagesBFilteredName = new Vector<String>();
 	public static Vector<DicomProperties> imagesProperties = new Vector<DicomProperties>();
 	public static Vector<File> imagesPaths = new Vector<File>();
+	public static int MAX_DISTANCE=50;
+	public static int MAX_DISTANCE_NEIG=20;
 	
 	
 	public static void addImagePath(File file){

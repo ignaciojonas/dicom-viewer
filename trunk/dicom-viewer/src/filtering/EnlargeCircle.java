@@ -28,6 +28,7 @@ public class EnlargeCircle {
 	HandImage handImage;
 	Vector<Point> newCircle = new Vector<Point>();
 	Vector<Line> normales = new Vector<Line>();
+	Vector<Point> reduceCircle = new Vector<Point>();
 
 	public Vector<Point> getNewCircle() {
 		return newCircle;
@@ -35,6 +36,7 @@ public class EnlargeCircle {
 	public Vector<Line> getNormales() {
 		return normales;
 	}
+	
 	public EnlargeCircle(HandImage handImage, int radio,BufferedImage image,Vector<Point> points) {
 		this.radio=radio;
 		this.image=image;
@@ -49,13 +51,9 @@ public class EnlargeCircle {
 	
 	//nuevo
 	private void enlargePoint(Point p1,Point p2,Point p3){
-		System.out.println("Comienzo: "+p2.x+":"+p2.y);
-		if((p2.x==374)&&(p2.y==242)){
-			System.out.println("Caso Particular");
-		}
-		if((p2.x==374)&&(p2.y==241)){
-			System.out.println("Caso Particular");
-		}
+//		if((p2.x==374)&&(p2.y==242)){
+//			System.out.println("Caso Particular");
+//		}
 		Point set = new Point (p2.x,p2.y);
 		Point antSet;//Anterior Avance
 		int color = image.getRGB(p2.x,p2.y);
@@ -108,13 +106,12 @@ public class EnlargeCircle {
 		set = selectPoint(ant,blackPoints,p2,normal);
 		newCircle.add(set);
 		normales.add(new Line(p2,set));
-		System.out.println("Termine: "+p2.x+":"+p2.y);
 	}
 
 	private Point selectPoint(Point ant, Vector<Point> blackPoints,Point p2,Normal normal) {
-		if((p2.x==325)&&(p2.y==99)){
-			System.out.println("Caso Particular");
-		}
+//		if((p2.x==325)&&(p2.y==99)){
+//			System.out.println("Caso Particular");
+//		}
 		if(ant==null)
 			return blackPoints.get(0);
 		
@@ -134,8 +131,8 @@ public class EnlargeCircle {
 		}
 		Line lin=normales.get(normales.size()-1);
 		double dis=lin.getSize()-Math.abs(getDistance(p2, ret));
-		//ACA si la distancia es mucha, entonces le pongo el anterior en la direccion de la normal
-		if(Math.abs(dis)>20){
+		
+		if(Math.abs(dis)>=ImagesData.MAX_DISTANCE_NEIG){
 			int i=1;
 			Line l=normales.get(normales.size()-1);
 			ret=(Point) p2.clone();
@@ -162,7 +159,7 @@ public class EnlargeCircle {
 			}	
 		}
 		//QUE NO CREZCA MAS QUE 30
-		if(Math.abs(getDistance(p2, ret))>50){
+		if(Math.abs(getDistance(p2, ret))>=ImagesData.MAX_DISTANCE){
 			int i=1;
 			ret=(Point) p2.clone();
 			double sizeN=getDistance(p2, ret);
@@ -209,7 +206,7 @@ public class EnlargeCircle {
 					
 					
 				}
-
+			
 			return newCircle;
 			
 
@@ -222,28 +219,48 @@ public class EnlargeCircle {
 		return new Point(-vy,vx);
 	}
 	public Normal getVectorNormal(Point p1,Point p2,Point p3){
-
 		Point aux1= getNormal(p1, p2);
-		  
 		Point aux2= getNormal(p2, p3);
-		Point ret =new Point((aux1.x+aux2.x)/2,(aux1.y+aux2.y)/2);
+		double x=(aux1.x+aux2.x)/2.0;
+		double y=(aux1.y+aux2.y)/2.0;
 		
-		double modulo = Math.sqrt((ret.x*ret.x + ret.y*ret.y));
-		double xx =ret.x/modulo;
-		double yy=ret.y/modulo;
-//		if (xx>=0.5)
-//			xx=1;
-//		if (yy>=0.5)
-//			yy=1;
-//		if (xx<=-0.5)
-//			xx=-1;
-//		if (yy<=-0.5)
-//			yy=-1;
+		double modulo = Math.sqrt((x*x + y*y));
+		if(modulo==0)
+			modulo=1;
+		double xx =x/modulo;
+		double yy=y/modulo;
 		return new Normal(xx,yy);
 		
 		
 	}
 	
+	public Vector<Point> getReduceCircle(){
+		reduceCircle=new Vector<Point>();
+		int size=newCircle.size();
+		if (size>3)
+			for (int i = 0; i < size; i++) {
+				
+				if ((size-i)>2){
+					reducePoint(newCircle.get(i+2),newCircle.get(i+1),newCircle.get(i));
+					
+				}else{
+					if ((size-i)==2){
+						reducePoint(newCircle.get(0),newCircle.get(i+1),newCircle.get(i));
+						
+					}else{
+						if((size-i)==1){
+							reducePoint(newCircle.get(1),newCircle.get(0),newCircle.get(i));
+							
+						}
+					}
+				}
+			}
+		return reduceCircle;
+	}
 	
+	private void reducePoint(Point p1,Point p2, Point p3){
+		Normal normal= getVectorNormal(p1,p2,p3);
+		reduceCircle.add(normal.getNormalSubtract(p2,10));
+	}
 }
 
