@@ -51,7 +51,7 @@ public SaveMeshSur(String path) {
 		pw.println(Mesh.trianglesSUR);
 		pw.println("*COORDINATES");
 		
-		pw.println(" "+Mesh.po);
+		pw.println(" "+Mesh.cantPoints3D);
 		
 		pw.println(Mesh.pointsSUR);
 		pw.println("*FRONT_VOLUME");
