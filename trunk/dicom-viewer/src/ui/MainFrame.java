@@ -55,6 +55,7 @@ import data.io.Encoder;
 import data.io.LoadFile;
 import data.io.SaveFile;
 import data.io.SaveFilteredImages;
+import data.io.SaveMeshSur;
 import draw3D.Mesh;
 import draw3D.OpenGLCanvas;
 import draw3D.Setup3D;
@@ -1382,6 +1383,8 @@ public class MainFrame extends javax.swing.JFrame {
 					return;
 				}
 			}
+			SaveMeshSur sv=new SaveMeshSur(file.getAbsolutePath());
+			sv.save2();
 			
 		}
 		
@@ -1415,4 +1418,5 @@ public class MainFrame extends javax.swing.JFrame {
 		ed.setVisible(true);
 	}
 
+}
 }
