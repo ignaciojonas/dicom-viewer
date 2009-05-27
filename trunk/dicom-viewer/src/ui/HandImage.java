@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.PrintWriter;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -465,7 +466,7 @@ public void enlargeCircleForAll(){
 
 public void generateMesh(){
 	Mesh mesh = new Mesh();
-	
+	mesh.pp.add(new Point3D(-1,-1,-1));
 	int size = circleAllPointsEnlarge.size();
 	float div= 90.0f;
 	float dist = 0.0f;
@@ -485,8 +486,6 @@ public void generateMesh(){
 		Mesh.addTriangles(vv1,vv2);
 	}	
 }
-
-
 
 
 }
