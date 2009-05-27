@@ -243,11 +243,7 @@ public class RGDialog extends javax.swing.JDialog {
 			JOptionPane.showMessageDialog(this, "PG must be double between 0 and 1", "Error", JOptionPane.WARNING_MESSAGE);
 			error=true;
 		}
-		System.out.println();
-		System.out.println("Configuracion K: "+K);
-		System.out.println("Configuracion radio: "+radio);
-		System.out.println("Configuracion radioEntorno: "+radioEntorno);
-		System.out.println("Configuracion pg: "+pg);
+
 		
 		if (!error){
 			Vector <Criterio> criterios =new Vector<Criterio>();

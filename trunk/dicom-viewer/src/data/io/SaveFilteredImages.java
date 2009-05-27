@@ -30,8 +30,6 @@ public class SaveFilteredImages extends Thread{
 		this.tab=tab;
 	}
 	public void run(){
-		System.out.println("images size "+images.size());
-		System.out.println("imagesName size "+ImagesData.imagesBFilteredName.size());
 		if(images.size()>0){
 			VisualData.jProgressBar.setMaximum((int)images.size());
 			VisualData.jProgressBar.setValue(0);

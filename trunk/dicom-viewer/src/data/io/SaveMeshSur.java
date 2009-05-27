@@ -47,7 +47,6 @@ public SaveMeshSur(String path) {
 		pw.println("1 "+mesh.size()+" Tri3");
 		pw.println("");
 		pw.println("*INCIDENCE");
-		System.out.println("escribiendo ");
 		pw.println(Mesh.trianglesSUR);
 		pw.println("*COORDINATES");
 		

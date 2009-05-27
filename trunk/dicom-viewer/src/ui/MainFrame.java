@@ -53,6 +53,7 @@ import data.VisualData;
 import data.io.DicomProperties;
 import data.io.Encoder;
 import data.io.LoadFile;
+import data.io.OpenSUR;
 import data.io.SaveFile;
 import data.io.SaveFilteredImages;
 import data.io.SaveMeshSur;
@@ -155,6 +156,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private JMenuItem jMenuItemOpenMalla;
 	private JMenuItem jMenuItemDSeeds;
 	private JMenuItem jMenuItemSaveMesh;
+	private JMenuItem jMenuItemOpenMesh;
 	private JMenu jMenu3;
 	private JMenuBar jMenuBar1;
 	private ThreadPlay tP=null;
@@ -703,7 +705,7 @@ public class MainFrame extends javax.swing.JFrame {
 						jMenuItemOpenMalla.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/opencircle.gif")));
 						jMenuItemOpenMalla.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
-								openMeshActionPerformed(evt);
+								openCircleMeshActionPerformed(evt);
 							}
 						});
 					}
@@ -910,6 +912,20 @@ public class MainFrame extends javax.swing.JFrame {
 					{
 						jSeparator1 = new JSeparator();
 						jMenu3D.add(jSeparator1);
+					}
+					{
+						jMenuItemOpenMesh = new JMenuItem();
+						jMenu3D.add(jMenuItemOpenMesh);
+						jMenuItemOpenMesh.setText("Open Mesh .Sur");
+						jMenuItemOpenMesh.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/savecircle.gif")));
+						
+						jMenuItemOpenMesh.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								openMeshActionPerformed(evt);
+							}
+
+						
+						});
 					}
 					{
 						jMenuItemSaveMesh = new JMenuItem();
@@ -1391,7 +1407,7 @@ public class MainFrame extends javax.swing.JFrame {
 	}
 	
 	
-	private void openMeshActionPerformed(ActionEvent evt) {
+	private void openCircleMeshActionPerformed(ActionEvent evt) {
 		filechooser = new JFileChooser(new File("c:\\"));
 		filechooser.setMultiSelectionEnabled(false);
 		FFilter crlFilter; 
@@ -1417,6 +1433,22 @@ public class MainFrame extends javax.swing.JFrame {
 	private void jMenuConfigEnlargeActionPerformed(ActionEvent evt) {
 		EnlargeDialog ed=new EnlargeDialog(this);
 		ed.setVisible(true);
+	}
+	private void openMeshActionPerformed(ActionEvent evt) {
+		filechooser = new JFileChooser(new File("c:\\"));
+		filechooser.setMultiSelectionEnabled(false);
+		FFilter crlFilter; 
+		File file;
+		crlFilter = new FFilter("sur", "Mesh Files");
+		filechooser.addChoosableFileFilter(crlFilter);
+		filechooser.setAcceptAllFileFilterUsed(true);
+		filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		if (filechooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			file=filechooser.getSelectedFile();
+			OpenSUR os=new OpenSUR(file.getAbsolutePath());
+			load3DMenuItem.setEnabled(true);
+		}
+		
 	}
 
 }

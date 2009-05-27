@@ -53,8 +53,7 @@ public class RegionGrowing extends Thread{
 	    for (Iterator iterator = criterios.iterator(); iterator.hasNext();) {
 			Criterio criterio = (Criterio) iterator.next();
 			int radio = criterio.getRadio();
-			System.out.println();
-			System.out.println("#### CRITERIO: "+criterio.getType()+" ####");
+	
 		    
 		    for (int i = 0; i < imagesB.size(); i++) {//recorre todas las imagenes
 		    	
@@ -81,12 +80,12 @@ public class RegionGrowing extends Thread{
 		   	    	intensidadCaracteristicaTotal+=intensidadCaracteristica;
 		   	    	
 		   	    	int temp=s+1;
-		   	    	System.out.println("intensidadCaracteristica "+ temp+": "+intensidadCaracteristica);
+		   	    	
 		   		}
 		    	desvio=desvio/s;
-		    	System.out.println("desvio: "+ desvio+" s: "+s);
+		    	
 		    	intensidadCaracteristicaTotal=intensidadCaracteristicaTotal/s;
-		    	System.out.println("intensidadCaracteristicaTotal: "+ intensidadCaracteristicaTotal);
+		    	
 		    	
 		    	visits = new byte[width+1][height+1];
 		 	    

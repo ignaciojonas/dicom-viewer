@@ -74,11 +74,9 @@ public class ImagesData {
 					//Creo un diccionario que me sabe decir, dado un tag (int), como se llama ese atributo
 					ElementDictionary ed = ElementDictionary.getDictionary();
 					//Obtengo el nombre del atributo
-					//System.out.print(ed.nameOf(de.tag())+"  -  ");
+					
 
 					//corto la info que necesito del string
-
-					//	System.out.println(a.substring(a.indexOf("[")+1, a.indexOf("]")));
 
 					if(!ed.nameOf(de.tag()).equals("Pixel Data"))
 						dicomProper.addPropertie(ed.nameOf(de.tag()), a.substring(a.indexOf("[")+1, a.indexOf("]")));

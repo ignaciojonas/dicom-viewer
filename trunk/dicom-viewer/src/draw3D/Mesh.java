@@ -15,6 +15,12 @@ public class Mesh {
 	public static String pointsSUR="";
 	public static String trianglesSUR="";
 
+	public static void setTriangles(Vector<Triangle3D> triangles) {
+		Mesh.triangles = triangles;
+	}
+	public static void setPoints(Vector<Point3D> points) {
+		Mesh.points = points;
+	}
 	
 	public static void addTriangle(Triangle3D trian){
 		triangles.add(trian);

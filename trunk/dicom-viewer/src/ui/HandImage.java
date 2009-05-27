@@ -405,7 +405,7 @@ public void setImage() {
 		if(aux>1)
 		VisualData.setjLabelNameImage(ImagesData.imagesBFilteredName.get(index));}
 	catch (Exception e){
-//		System.out.println("Error name");
+
 	}
 	if(imagesB.size()>0){
 		this.image = imagesB.elementAt(index);
