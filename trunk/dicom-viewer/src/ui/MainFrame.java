@@ -55,7 +55,6 @@ import data.io.Encoder;
 import data.io.LoadFile;
 import data.io.SaveFile;
 import data.io.SaveFilteredImages;
-import data.io.SaveMeshSur;
 import draw3D.Mesh;
 import draw3D.OpenGLCanvas;
 import draw3D.Setup3D;
@@ -102,6 +101,8 @@ public class MainFrame extends javax.swing.JFrame {
 	private JButton jButtonNext;
 	private JCheckBoxMenuItem jCheckBoxMenuItemSeeds;
 	private JLabel jLabelXY;
+	private JMenuItem jMenuConfigEnlarge;
+	private JSeparator jSeparator7;
 	private JSeparator jSeparator6;
 	private JMenuItem jMenuItemEnlargeCircle;
 	private JMenuItem jMenuItemEnlargeCircleforAll;
@@ -764,6 +765,21 @@ public class MainFrame extends javax.swing.JFrame {
 						jSeparator2 = new JSeparator();
 						jMenu2D.add(jSeparator2);
 					}
+					{
+						jMenuConfigEnlarge = new JMenuItem();
+						jMenu2D.add(jMenuConfigEnlarge);
+						jMenuConfigEnlarge.setText("Config. Enlarge");
+						jMenuConfigEnlarge.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/saveall_edit.gif")));
+						jMenuConfigEnlarge.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								jMenuConfigEnlargeActionPerformed(evt);
+							}
+						});
+					}
+					{
+						jSeparator7 = new JSeparator();
+						jMenu2D.add(jSeparator7);
+					}
 					
 					{
 						jMenuItemEnlargeCircle = new JMenuItem();
@@ -780,7 +796,6 @@ public class MainFrame extends javax.swing.JFrame {
 						});
 					}
 
-					
 				}
 				{
 					
@@ -1367,8 +1382,7 @@ public class MainFrame extends javax.swing.JFrame {
 					return;
 				}
 			}
-			SaveMeshSur sv=new SaveMeshSur(file.getAbsolutePath());
-			sv.save();
+			
 		}
 		
 	}
@@ -1396,5 +1410,9 @@ public class MainFrame extends javax.swing.JFrame {
 		
 	}
 	
-	
+	private void jMenuConfigEnlargeActionPerformed(ActionEvent evt) {
+		EnlargeDialog ed=new EnlargeDialog(this);
+		ed.setVisible(true);
+	}
+
 }
