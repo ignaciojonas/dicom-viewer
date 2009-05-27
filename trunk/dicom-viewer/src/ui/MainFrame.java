@@ -1390,6 +1390,7 @@ public class MainFrame extends javax.swing.JFrame {
 		
 	}
 	
+	
 	private void openMeshActionPerformed(ActionEvent evt) {
 		filechooser = new JFileChooser(new File("c:\\"));
 		filechooser.setMultiSelectionEnabled(false);
@@ -1418,5 +1419,4 @@ public class MainFrame extends javax.swing.JFrame {
 		ed.setVisible(true);
 	}
 
-}
 }
