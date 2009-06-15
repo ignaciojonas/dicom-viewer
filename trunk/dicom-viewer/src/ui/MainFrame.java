@@ -507,7 +507,7 @@ public class MainFrame extends javax.swing.JFrame {
 					VisualData.jLabelFPS = new JLabel();
 					jPanelStatusBar.add(VisualData.jLabelFPS);
 					VisualData.jLabelFPS.setText("");
-					VisualData.jLabelFPS.setBounds(260, 5, 133, 14);
+					VisualData.jLabelFPS.setBounds(550, 5, 133, 14);
 				}
 				
 			}
@@ -1183,7 +1183,7 @@ public class MainFrame extends javax.swing.JFrame {
 	public void load3DMenuItemActionPerformed(ActionEvent evt) {
 		
 		load3D();
-		jTabbedPane1.setSelectedIndex(1);
+		jTabbedPane1.setSelectedIndex(2);
 	
 	}
 	
@@ -1447,6 +1447,7 @@ public class MainFrame extends javax.swing.JFrame {
 			file=filechooser.getSelectedFile();
 			OpenSUR os=new OpenSUR(file.getAbsolutePath());
 			load3DMenuItem.setEnabled(true);
+			load3DMenuItemActionPerformed(null);
 		}
 		
 	}

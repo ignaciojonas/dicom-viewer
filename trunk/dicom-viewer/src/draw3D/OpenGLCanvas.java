@@ -20,13 +20,13 @@ import org.jouvieje.opengl.terrain.Terrain;
 import org.jouvieje.util.math.Vector3f;
 import org.jouvieje.util.math.Vector4f;
 
+import sound.PlayWav;
+
 import data.VisualData;
 import draw3D.camera.ViewerCamera;
 import draw3D.camera.setup.CameraMode;
 import draw3D.camera.setup.Viewer;
 import draw3D.scenario.MazeGenerator;
-import draw3D.scenario.picker.Picker;
-import draw3D.scenario.picker.Target;
 import draw3D.scenario.screen.Triangle3D;
 import net.java.games.jogl.*;
 
@@ -34,7 +34,7 @@ import net.java.games.jogl.*;
 public class OpenGLCanvas extends Scene
 {
 	
-	private Picker pickable = new Picker(this);
+
 
 	public int targetKill =-1;
 
@@ -74,10 +74,7 @@ public class OpenGLCanvas extends Scene
 
 	
 	
-	public static void main(String[] args)
-	{
-		Load.load("Zhooter",	OpenGLCanvas.class,Settings.Renderer.JOGL);
-	}
+
 	private static Cursor loadCursor(String cursorName, Point hotSpot)
 	{
 		Image cursor = new ImageIcon(OpenGLCanvas.class.getClassLoader().getResource(cursorName)).getImage();
@@ -123,101 +120,88 @@ public class OpenGLCanvas extends Scene
 		glDrawable.addKeyListener(camera);
 		glDrawable.addMouseListener(camera);
 		glDrawable.addMouseMotionListener(camera);
-		
-		
-//		For object selection
-		addPickable( pickable);
-		
-		pickable.initTargets();
 
 		quadric = glu.gluNewQuadric();
 
-
-	
-		Setup3D.loadTextures(glDrawable);
-		
 		gl.glShadeModel(GL.GL_SMOOTH);							//Smooth color shading
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);				//Clearing color
+		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);				//Clearing color
 		gl.glClearDepth(1.0);									//Enable Clearing of the Depth buffer
 		gl.glDepthFunc(GL.GL_LEQUAL);							//Type of Depth test
 		gl.glEnable(GL.GL_DEPTH_TEST);							//Enable Depth Testing
 
-		//Define the correction done to the perspective calculation (perspective looks a it better)
-		gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
-		
 		
 		labyrinth = new MazeGenerator(labyrinthSize);
 		labyrinth.generate();
 			
-		initLight(gl);
+		//Define the correction done to the perspective calculation (perspective looks a it better)
+		gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
+		
+		//Ambient light component
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, lightAmbient);
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, lightDiffuse);
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR, specular);
+		
+		
+		
+		//Light position
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, Setup3D.lightPosition0);
+
+		//Enable the first light ang thelighting mode
 		gl.glEnable(GL.GL_LIGHT0);
+		
+		
+		
+		
+		
+		//Ambient light component
+		gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightAmbient);
+		gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, lightDiffuse);
+		gl.glLightfv(GL.GL_LIGHT1, GL.GL_SPECULAR, specular);
+		
+		//Light position
+		gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, Setup3D.lightPosition1);
+
+		//Enable the first light ang thelighting mode
+		gl.glEnable(GL.GL_LIGHT1);
+		
+		
+		
+		
+		
+		
+		//Ambient light component
+		gl.glLightfv(GL.GL_LIGHT2, GL.GL_AMBIENT, lightAmbient);
+		gl.glLightfv(GL.GL_LIGHT2, GL.GL_DIFFUSE, lightDiffuse);
+		gl.glLightfv(GL.GL_LIGHT2, GL.GL_SPECULAR, specular);
+		
+		//Light position
+		gl.glLightfv(GL.GL_LIGHT2, GL.GL_POSITION, Setup3D.lightPosition2);
+
+		//Enable the first light ang thelighting mode
+		gl.glEnable(GL.GL_LIGHT2);
+		
+		//Ambient light component
+		gl.glLightfv(GL.GL_LIGHT3, GL.GL_AMBIENT, lightAmbient);
+		gl.glLightfv(GL.GL_LIGHT3, GL.GL_DIFFUSE, lightDiffuse);
+		gl.glLightfv(GL.GL_LIGHT3, GL.GL_SPECULAR, specular);
+		
+		//Light position
+		gl.glLightfv(GL.GL_LIGHT3, GL.GL_POSITION, Setup3D.lightPosition3);
+
+		//Enable the first light ang thelighting mode
+		gl.glEnable(GL.GL_LIGHT3);
+		
+		
 		gl.glEnable(GL.GL_LIGHTING);
 		
 		getAnimator().start();
 	}
-	
-	
 
-	private boolean draw=true;
-
-	public boolean isDraw() {
-		return draw;
-	}
-	public void setDraw(boolean draw) {
-		this.draw = draw;
-	}
-	
-	//define the light0 properties
+	//define the light properties
 	float[] lightDiffuse = {1.0f, 0.0f, 0.0f, 1.0f};	//yellow diffuse : color where light hit directly the object's surface
 	float[] lightAmbient = {1.0f, 0.0f, 0.0f, 1.0f};	//red ambient    : color applied everywhere
+	float specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
 	
-	
-	
-	
-	float[] objectPosition= {5.0f, 2.0f, 14.0f, 1.0f};
-	
-	public void drawCube(GL gl, float size)
-	{
-		gl.glBegin(GL.GL_QUADS);
-		  //Quad 1
-			gl.glNormal3f(1.0f, 0.0f, 0.0f);   //N1
-			gl.glTexCoord2f(0.0f, 1.0f); gl.glVertex3f( size/2, size/2, size/2);    //V2
-			gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3f( size/2,-size/2, size/2);    //V1
-			gl.glTexCoord2f(1.0f, 0.0f); gl.glVertex3f( size/2,-size/2,-size/2);    //V3
-			gl.glTexCoord2f(1.0f, 1.0f); gl.glVertex3f( size/2, size/2,-size/2);    //V4
-		  //Quad 2
-			gl.glNormal3f(0.0f, 0.0f, -1.0f);  //N2
-			gl.glTexCoord2f(0.0f, 1.0f); gl.glVertex3f( size/2, size/2,-size/2);    //V4
-			gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3f( size/2,-size/2,-size/2);    //V3
-			gl.glTexCoord2f(1.0f, 0.0f); gl.glVertex3f(-size/2,-size/2,-size/2);    //V5
-			gl.glTexCoord2f(1.0f, 1.0f); gl.glVertex3f(-size/2, size/2,-size/2);    //V6
-		  //Quad 3
-			gl.glNormal3f(-1.0f, 0.0f, 0.0f);  //N3
-			gl.glTexCoord2f(0.0f, 1.0f); gl.glVertex3f(-size/2, size/2,-size/2);    //V6
-			gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3f(-size/2,-size/2,-size/2);    //V5
-			gl.glTexCoord2f(1.0f, 0.0f); gl.glVertex3f(-size/2,-size/2, size/2);    //V7
-			gl.glTexCoord2f(1.0f, 1.0f); gl.glVertex3f(-size/2, size/2, size/2);    //V8
-		  //Quad 4
-			gl.glNormal3f(0.0f, 0.0f, 1.0f);   //N4
-			gl.glTexCoord2f(0.0f, 1.0f); gl.glVertex3f(-size/2, size/2, size/2);    //V8
-			gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3f(-size/2,-size/2, size/2);    //V7
-			gl.glTexCoord2f(1.0f, 0.0f); gl.glVertex3f( size/2,-size/2, size/2);    //V1
-			gl.glTexCoord2f(1.0f, 1.0f); gl.glVertex3f( size/2, size/2, size/2);    //V2
-		  //Quad 5
-			gl.glNormal3f(0.0f, 1.0f, 0.0f);   //N5
-			gl.glTexCoord2f(0.0f, 1.0f); gl.glVertex3f(-size/2, size/2,-size/2);    //V6
-			gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3f(-size/2, size/2, size/2);    //V8
-			gl.glTexCoord2f(1.0f, 0.0f); gl.glVertex3f( size/2, size/2, size/2);    //V2
-			gl.glTexCoord2f(1.0f, 1.0f); gl.glVertex3f( size/2, size/2,-size/2);    //V4
-		  //Quad 6
-			gl.glNormal3f(1.0f, -1.0f, 0.0f);  //N6
-			gl.glTexCoord2f(0.0f, 1.0f); gl.glVertex3f(-size/2,-size/2, size/2);    //V7
-			gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3f(-size/2,-size/2,-size/2);    //V5
-			gl.glTexCoord2f(1.0f, 0.0f); gl.glVertex3f( size/2,-size/2,-size/2);    //V3
-			gl.glTexCoord2f(1.0f, 1.0f); gl.glVertex3f( size/2,-size/2, size/2);    //V1
-		gl.glEnd();
-	}
-
 	
 	/***********************
 	 *    Draw the scene   *
@@ -226,176 +210,144 @@ public class OpenGLCanvas extends Scene
 	{
 	if(draw){
 		this.glDrawable = glDrawable;
-		
-		
+				
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);       	//Clear The Screen And The Depth Buffer
 		gl.glLoadIdentity();                                         		//Reset The View
 		
 		camera.update(getCounter().getTimePassed());
 		camera.lookAt(glDrawable);
 
-		/* Fill with one stencil buffer where the ground is */
-		
-		gl.glColorMask(false, false, false, false);				
-		gl.glDepthMask(true);
-		gl.glEnable(GL.GL_STENCIL_TEST);						
-		gl.glStencilFunc(GL.GL_ALWAYS, 1, 1);					
-		gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_REPLACE);	
 	
 		gl.glDepthMask(true);
-		gl.glColorMask(true, true, true, false);				
+		gl.glColorMask(true, true, true, true);				
+	
+		
+		//drawLights
+		drawLights(glDrawable);
 		
 		
-		/* Reflection */
-		gl.glStencilFunc(GL.GL_EQUAL,1 , 1);					
-		gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_KEEP);		
 		
-//		gl.glPushMatrix();
-//			gl.glScalef(1.0f, -1.0f, 1.0f);		//Mirror Y
-//			drawObjects(glDrawable);
-//			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, Setup3D.lightPosition0);
-//	        gl.glEnable(GL.GL_LIGHTING);   
-//	        drawTriangles();
-//	        gl.glDisable(GL.GL_LIGHTING);
-//		gl.glPopMatrix();
-//		gl.glDisable(GL.GL_STENCIL_TEST);
+		//Mesh and Circle
+		if (Setup3D.eLight0){
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, Setup3D.lightPosition0);
+			gl.glEnable(GL.GL_LIGHT0);
+		}
+		if (Setup3D.eLight1){
+			gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, Setup3D.lightPosition1);
+			gl.glEnable(GL.GL_LIGHT1);
+		}
+		if (Setup3D.eLight2){
+			gl.glLightfv(GL.GL_LIGHT2, GL.GL_POSITION, Setup3D.lightPosition2);
+			gl.glEnable(GL.GL_LIGHT2);
+		}
+		if (Setup3D.eLight3){
+			gl.glLightfv(GL.GL_LIGHT3, GL.GL_POSITION, Setup3D.lightPosition3);
+			gl.glEnable(GL.GL_LIGHT3);
+		}
+		
+		gl.glEnable(GL.GL_LIGHTING);
+		gl.glTranslatef(Setup3D.objectPosition[0], Setup3D.objectPosition[1], Setup3D.objectPosition[2]);
+		
+		SimpleShape.drawGLUSphere(glDrawable, 2.0f, 40, false, GLU.GLU_FILL);//Test Circle
+		
+		gl.glBegin(GL.GL_TRIANGLES);
 
-		/* Draw the ground */
-		//drawGround(gl);
+        	drawMesh();
+        	
+		gl.glEnd();
+		gl.glTranslatef(-Setup3D.objectPosition[0], -Setup3D.objectPosition[1], -Setup3D.objectPosition[2]);
 		
-		drawObjects(glDrawable);
-	
-		//drawTriangles();
+		gl.glDisable(GL.GL_LIGHT3);
+		gl.glDisable(GL.GL_LIGHT2);
+		gl.glDisable(GL.GL_LIGHT1);
+		gl.glDisable(GL.GL_LIGHT0);
+		
+		gl.glDisable(GL.GL_LIGHTING);
+		 		 
+		
+		
 		gl.glStencilFunc(GL.GL_EQUAL, 1, 1);					
 		gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_KEEP);		
 		
-		gl.glPushMatrix();
-			//gl.glScalef(1.0f, -1.0f, 1.0f);						//Mirror Y
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, Setup3D.lightPosition0);
-	        gl.glEnable(GL.GL_LIGHTING);   
-	        drawTriangles();
-	        gl.glDisable(GL.GL_LIGHTING);
-	       
-		gl.glPopMatrix();
-		gl.glDisable(GL.GL_STENCIL_TEST);
-		
-		
-
 //		FPS information
 		drawFPSInformation(glDrawable);
 	}
 	}
 
-	/*
-	 * Initialize all the lights
-	 */
-	public void initLight(GL gl)
-	{
-		//light properties
-		float[] zero = {0.0f, 0.0f, 0.0f, 1.0f};
-		float[] one = {1.0f, 1.0f, 1.0f, 1.0f};
-		float[] position = {1.0f, 1.0f, 0.3f, 0.0f};
-		
-		gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, zero);
-		gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, one);
-		gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR, one);		//Default value for GL_LIGHT0 
-		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, Setup3D.lightPosition0);
-		
-		//light model properties
-		float[] model_ambient = {1.4f, 0.4f, 0.4f, 1.0f};						//0=2sided, 1=1sided
 
-		gl.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT, model_ambient);				//small white ambient light
-	
-		gl.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
+
+
+
+	private void drawLights(GLDrawable glDrawable) {
+		gl.glColor3f(0.5f, 0.5f,0.5f);
+		
+		SimpleShape.drawBoxAt(gl, 0.05f, 0.05f, 6f, Setup3D.lightPosition0[0], Setup3D.lightPosition0[1], Setup3D.lightPosition0[2]+3);
+		SimpleShape.drawBoxAt(gl, 6f, 0.05f, 0.05f, Setup3D.lightPosition0[0]+3, Setup3D.lightPosition0[1], Setup3D.lightPosition0[2]);
+		SimpleShape.drawBoxAt(gl, 0.05f, 0.05f, 6f, Setup3D.lightPosition1[0], Setup3D.lightPosition1[1], Setup3D.lightPosition1[2]+3);
+		SimpleShape.drawBoxAt(gl, 6f, 0.05f, 0.05f, Setup3D.lightPosition2[0]+3, Setup3D.lightPosition2[1], Setup3D.lightPosition2[2]);
+		
+		
+		//Light
 			
 		
-	}
-	
-	
-	float[] no_mat = {0.0f, 0.0f, 0.0f, 1.0f};
-	float[] mat_ambient = {0.7f, 0.7f, 0.7f, 1.0f};
-	float[] mat_ambient_color = {0.8f, 0.8f, 0.2f, 1.0f};
-	float[] mat_diffuse = {0.1f, 0.5f, 0.8f, 1.0f};
-	float[] mat_specular = {1.0f, 1.0f, 1.0f, 1.0f};
-	float no_shininess = 0.0f;
-	float low_shininess = 5.0f;
-	float high_shininess = 100.0f;
-	float[] mat_emission = {0.3f, 0.2f, 0.2f, 0.0f};
-	
-	public void drawTriangles(){
-		if(Setup3D.enableLight0)
-			gl.glEnable(GL.GL_LIGHT0);
-		if(Setup3D.enableLight1)
-			gl.glEnable(GL.GL_LIGHT1);
-		if(Setup3D.enableLight2)
-			gl.glEnable(GL.GL_LIGHT2);
-		gl.glEnable(GL.GL_LIGHTING);
-		gl.glTranslatef(objectPosition[0], objectPosition[1], objectPosition[2]+zOffset);
 		
-		gl.glBegin(GL.GL_TRIANGLES);
-		 gl.glPushMatrix();
-	       	gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, Setup3D.lightPosition0);
-	        gl.glEnable(GL.GL_LIGHTING);   
-	       
-	        	drawMesh();
-			 gl.glDisable(GL.GL_LIGHTING);
-	    gl.glPopMatrix();
-		gl.glEnd();
+			gl.glTranslatef(Setup3D.lightPosition0[0], Setup3D.lightPosition0[1], Setup3D.lightPosition0[2]);
+			
+			if (Setup3D.eLight0){
+				gl.glColor3f(1.0f, 1.0f,0.0f);
+			}else
+				gl.glColor3f(0.5f, 0.5f,0.5f);
+			SimpleShape.drawGLUSphere(glDrawable, 0.2f, 15, false, GLU.GLU_FILL);
+					
+			gl.glTranslatef(-Setup3D.lightPosition0[0], -Setup3D.lightPosition0[1], -Setup3D.lightPosition0[2]);
+			
+			gl.glTranslatef(Setup3D.lightPosition1[0], Setup3D.lightPosition1[1], Setup3D.lightPosition1[2]);
+			if (Setup3D.eLight1){
+				gl.glColor3f(1.0f, 1.0f,0.0f);
+			}else
+				gl.glColor3f(0.5f, 0.5f,0.5f);
+			
+			SimpleShape.drawGLUSphere(glDrawable, 0.2f, 15, false, GLU.GLU_FILL);
+			gl.glTranslatef(-Setup3D.lightPosition1[0], -Setup3D.lightPosition1[1], -Setup3D.lightPosition1[2]);
 		
-	//Enable the first light ang thelighting mode
-	gl.glDisable(GL.GL_LIGHT2);
-	gl.glDisable(GL.GL_LIGHT1);
-	gl.glDisable(GL.GL_LIGHT0);
-	gl.glDisable(GL.GL_LIGHTING);
+		
+			gl.glTranslatef(Setup3D.lightPosition2[0], Setup3D.lightPosition2[1], Setup3D.lightPosition2[2]);
+			if (Setup3D.eLight2){
+				gl.glColor3f(1.0f, 1.0f,0.0f);
+			}else
+				gl.glColor3f(0.5f, 0.5f,0.5f);
+			SimpleShape.drawGLUSphere(glDrawable, 0.2f, 15, false, GLU.GLU_FILL);
+			gl.glTranslatef(-Setup3D.lightPosition2[0], -Setup3D.lightPosition2[1], -Setup3D.lightPosition2[2]);
+		
+			gl.glTranslatef(Setup3D.lightPosition3[0], Setup3D.lightPosition3[1], Setup3D.lightPosition3[2]);
+			if (Setup3D.eLight3){
+				gl.glColor3f(1.0f, 1.0f,0.0f);
+			}else
+				gl.glColor3f(0.5f, 0.5f,0.5f);
+			SimpleShape.drawGLUSphere(glDrawable, 0.2f, 15, false, GLU.GLU_FILL);
+			gl.glTranslatef(-Setup3D.lightPosition3[0], -Setup3D.lightPosition3[1], -Setup3D.lightPosition3[2]);
 	}
-	
-	
-	
-	public void drawObjects(GLDrawable glDrawable)
-	{
-		GL gl = glDrawable.getGL();
-		GLU glu = glDrawable.getGLU();
 
-		gl.glLoadName(OBJECT_ID);
-		gl.glPushName(0);
-		for(int i = 1; i < Setup3D.targets.size(); i++)
-		{
-			Target target = Setup3D.targets.get(i);
-			target.draw(i,gl,glDrawable,quadric);
+	
+	
+	
+	
+	private void drawMesh(){
+		Vector<Triangle3D> triangles = Mesh.getTriangles();
+		int s = triangles.size();
+		for (int i =0;i<s;i++){
+			triangles.get(i).draw(gl);
 		}
-	
-		gl.glPopName();
-		
-		
 	}
-
 	
-
 	
-	private void drawGround(final GL gl) {
-		
-		gl.glEnable(GL.GL_TEXTURE_2D);
-		gl.glBindTexture(GL.GL_TEXTURE_2D,  Setup3D.textures[0]);
-		gl.glEnable(GL.GL_BLEND);
-		gl.glBlendFunc(GL.GL_ONE, GL.GL_ONE_MINUS_SRC_ALPHA);
-		gl.glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
-		SimpleShape.drawXZRect(gl, labyrinthSize.width * Setup3D.GRID_SIZE, labyrinthSize.height * Setup3D.GRID_SIZE, 40);
-		
-		//SimpleShape.drawXZRectCentered(gl, 20, 20, 10);
-		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		gl.glDisable(GL.GL_BLEND);
-		gl.glDisable(GL.GL_TEXTURE_2D);
-		
-	}
-
-
 	private boolean showKeys=false;
 	private void drawFPSInformation(GLDrawable glDrawable) {
 		Dimension size = glDrawable.getSize();
 	//	screen.drawScore(size);
 		
 		ViewingTools.beginOrtho(glDrawable);
-		gl.glColor3f(1.0f, 1.0f, 1.0f);
+		gl.glColor3f(0.0f, 0.0f, 0.0f);
 		VisualData.jLabelFPS.setText("FPS = "+getCounter().getFPS());
 		if(showKeys){
 			printer.drawTextAt(glDrawable, "C : Take/Give-up mouse control", 10, size.height-20, 0);
@@ -403,6 +355,14 @@ public class OpenGLCanvas extends Scene
 			printer.drawTextAt(glDrawable, "Ctrl : Duck", 10, size.height-60, 0);
 			printer.drawTextAt(glDrawable, "Space : Jump", 10, size.height-80, 0);
 			printer.drawTextAt(glDrawable, "Q : Deplacement mode", 10, size.height-100, 0);
+			printer.drawTextAt(glDrawable, "Up : Light go ahead", 10, size.height-120, 0);
+			printer.drawTextAt(glDrawable, "Down : Light go back", 10, size.height-140, 0);
+			printer.drawTextAt(glDrawable, "Left : Light go left", 10, size.height-160, 0);
+			printer.drawTextAt(glDrawable, "Right : Light go right", 10, size.height-180, 0);
+			printer.drawTextAt(glDrawable, "UpPage : Light go uo", 10, size.height-200, 0);
+			printer.drawTextAt(glDrawable, "DowndPage : Light go down", 10, size.height-220, 0);
+			printer.drawTextAt(glDrawable, "End : Light Positional", 10, size.height-240, 0);
+			printer.drawTextAt(glDrawable, "1 : Enable Light Aux1", 10, size.height-260, 0);
 			
 		}else{
 			printer.drawTextAt(glDrawable, "F2 : Show/Hide Controls", 10, size.height-20, 0);
@@ -426,17 +386,55 @@ public class OpenGLCanvas extends Scene
 			case KeyEvent.VK_A: pressingKey=true;break;
 			case KeyEvent.VK_D: pressingKey=true; break;
 			case KeyEvent.VK_F2:showKeys=!showKeys;break;
-					
+			case KeyEvent.VK_PAGE_UP: moveLight(1, 0.1f);break;
+			case KeyEvent.VK_PAGE_DOWN: moveLight(1, -0.1f);break;
+			case KeyEvent.VK_LEFT: moveLight(0, 0.1f);break;
+			case KeyEvent.VK_RIGHT: moveLight(0, -0.1f);break;
+			case KeyEvent.VK_UP: moveLight(2, 0.1f);break;
+			case KeyEvent.VK_DOWN: moveLight(2, -0.1f);break;
+			case KeyEvent.VK_END:Setup3D.setPositional() ;break;
+			case KeyEvent.VK_DELETE:setSmooth() ;break;
+			case KeyEvent.VK_1:Setup3D.enableLight0() ;break;
+			case KeyEvent.VK_2:Setup3D.enableLight1() ;break;
+			case KeyEvent.VK_3:Setup3D.enableLight2() ;break;
+			case KeyEvent.VK_4:Setup3D.enableLight3() ;break;
+			
 		}
 	}
 
-
+	private int smooth = GL.GL_SMOOTH;
 	
+	
+	
+	private void setSmooth(){
+		if (smooth== GL.GL_SMOOTH){
+			gl.glShadeModel(GL.GL_FLAT);
+			smooth = 1;
+			
+		}
+		else{
+			gl.glShadeModel(GL.GL_SMOOTH);
+			smooth = GL.GL_SMOOTH;
+			
+		}
+	}
+	
+
+	private void moveLight(int index,float sum){
+		Setup3D.lightPosition0[index]+=sum;
+		Setup3D.lightPosition1[index]+=sum;
+		Setup3D.lightPosition2[index]+=sum;
+		Setup3D.lightPosition3[index]+=sum;
+	}
+	@Override
+	public void mouseMoved(MouseEvent me) {
+		// TODO Auto-generated method stub
+		super.mouseMoved(me);
+//		Setup3D.lightPosition0[0]=me.getX();
+	}
 	
 	public void keyReleased(KeyEvent ke){
 		pressingKey=false;
-		
-	
 	}
 	
 	private float zOffset = -7.0f;
@@ -452,14 +450,15 @@ public class OpenGLCanvas extends Scene
 		
 		
 	}
-	
-	private void drawMesh(){
-		Vector<Triangle3D> triangles = Mesh.getTriangles();
-		int s = triangles.size();
-		for (int i =0;i<s;i++){
-			triangles.get(i).draw(gl);
-		}
+	private boolean draw=true;
+
+	public boolean isDraw() {
+		return draw;
 	}
+	public void setDraw(boolean draw) {
+		this.draw = draw;
+	}
+
 
 	
 }
