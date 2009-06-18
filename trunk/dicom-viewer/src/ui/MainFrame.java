@@ -57,14 +57,14 @@ import data.io.OpenSUR;
 import data.io.SaveFile;
 import data.io.SaveFilteredImages;
 import data.io.SaveMeshSur;
+import draw2D.filtering.EnlargeCircle;
+import draw2D.filtering.MeanFilter;
+import draw2D.filtering.RegionGrowing;
 import draw3D.Mesh;
 import draw3D.OpenGLCanvas;
 import draw3D.Setup3D;
 import draw3D.scenario.screen.Point3D;
-import filtering.EnlargeCircle;
-import filtering.MeanFilter;
 
-import filtering.RegionGrowing;
 import filtering.rg.Criterio;
 import filtering.rg.CriterioRGEntorno;
 import filtering.rg.CriterioRGGradiente;
@@ -157,6 +157,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private JMenuItem jMenuItemDSeeds;
 	private JMenuItem jMenuItemSaveMesh;
 	private JMenuItem jMenuItemOpenMesh;
+	private JMenuItem  jMenuItemEnlargeCircleManualy;
 	private JMenu jMenu3;
 	private JMenuBar jMenuBar1;
 	private ThreadPlay tP=null;
@@ -772,32 +773,15 @@ public class MainFrame extends javax.swing.JFrame {
 						jMenuConfigEnlarge = new JMenuItem();
 						jMenu2D.add(jMenuConfigEnlarge);
 						jMenuConfigEnlarge.setText("Config. Enlarge");
-						jMenuConfigEnlarge.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/saveall_edit.gif")));
+						jMenuConfigEnlarge.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/configenlarge.gif")));
 						jMenuConfigEnlarge.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
 								jMenuConfigEnlargeActionPerformed(evt);
 							}
 						});
 					}
-					{
-						jSeparator7 = new JSeparator();
-						jMenu2D.add(jSeparator7);
-					}
 					
-					{
-						jMenuItemEnlargeCircle = new JMenuItem();
-						jMenu2D.add(jMenuItemEnlargeCircle);
-						jMenuItemEnlargeCircle.setText("Enlarge Circle");
-						jMenuItemEnlargeCircle.setMnemonic('E');
-						jMenuItemEnlargeCircle.setAccelerator(KeyStroke.getKeyStroke('E', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-						jMenuItemEnlargeCircle.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/enlarge.gif")));
-						
-						jMenuItemEnlargeCircle.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
-								jMenuItemEnlargeCircleActionPerformed(evt);
-							}
-						});
-					}
+					
 
 				}
 				{
@@ -866,7 +850,23 @@ public class MainFrame extends javax.swing.JFrame {
 					jMenu3D = new JMenu();
 					jMenuBar1.add(jMenu3D);
 					jMenu3D.setText("3D");
-					
+					{
+						jMenuItemEnlargeCircleManualy = new JMenuItem();
+						jMenu3D.add(jMenuItemEnlargeCircleManualy);
+						jMenuItemEnlargeCircleManualy.setText("Enlarge Circle Manualy");
+						jMenuItemEnlargeCircleManualy.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/enlarge.gif")));
+						
+						jMenuItemEnlargeCircleManualy.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								jMenuItemEnlargeCircleManualyActionPerformed(evt);
+								jMenuItemGenerateMesh.setEnabled(true);
+							}
+
+							
+
+						
+						});
+					}
 					{
 						jMenuItemEnlargeCircleforAll = new JMenuItem();
 						jMenu3D.add(jMenuItemEnlargeCircleforAll);
@@ -882,11 +882,12 @@ public class MainFrame extends javax.swing.JFrame {
 						
 						});
 					}
+					
 					{
 						jMenuItemGenerateMesh = new JMenuItem();
 						jMenu3D.add(jMenuItemGenerateMesh);
 						jMenuItemGenerateMesh.setText("Generate Mesh");
-						jMenuItemGenerateMesh.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/enlarge.gif")));
+						jMenuItemGenerateMesh.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/generatemesh.gif")));
 						jMenuItemGenerateMesh.setEnabled(false);
 						jMenuItemGenerateMesh.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
@@ -917,7 +918,7 @@ public class MainFrame extends javax.swing.JFrame {
 						jMenuItemOpenMesh = new JMenuItem();
 						jMenu3D.add(jMenuItemOpenMesh);
 						jMenuItemOpenMesh.setText("Open Mesh .Sur");
-						jMenuItemOpenMesh.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/savecircle.gif")));
+						jMenuItemOpenMesh.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/openmesh.gif")));
 						
 						jMenuItemOpenMesh.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
@@ -931,7 +932,7 @@ public class MainFrame extends javax.swing.JFrame {
 						jMenuItemSaveMesh = new JMenuItem();
 						jMenu3D.add(jMenuItemSaveMesh);
 						jMenuItemSaveMesh.setText("Save Mesh .Sur");
-						jMenuItemSaveMesh.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/savecircle.gif")));
+						jMenuItemSaveMesh.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/savemesh.gif")));
 						
 						jMenuItemSaveMesh.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
@@ -1212,7 +1213,7 @@ public class MainFrame extends javax.swing.JFrame {
 				handImage.addSeed(new Point (evt.getX(),evt.getY()));
 		}
 		if (evt.getButton()== MouseEvent.BUTTON3){
-				handImage.addCirclePoint(new Point (evt.getX(),evt.getY()));
+				handImage.addPointToInitCircle(new Point (evt.getX(),evt.getY()));
 		}
 		
 	}
@@ -1313,19 +1314,19 @@ public class MainFrame extends javax.swing.JFrame {
 		criterios.add(new CriterioRGGradiente(8,1.4,0.1,254));
 		criterios.add(new CriterioRGEntorno(5,1.4,2));
 		
-//		for (double K =1.4;K<1.5;K=K+0.1)
-//			for (int radio= 5;radio<13;radio++ ){
-//				
-//				//criterios.add(new CriterioRGSimple(radio,K));
-//				
-////				for (int radioEntorno= 1;radioEntorno<6;radioEntorno++ ){
-////					criterios.add(new CriterioRGEntorno(radio,K,radioEntorno));
-////				}
-//				for (int maxG= 254;maxG<255;maxG++ )
-//					for (double pg =0.1;pg<0.2;pg=pg+0.1)
-//						criterios.add(new CriterioRGGradiente(radio,K,pg,maxG));
-//						
-//			}	
+		for (double K =1.4;K<1.5;K=K+0.1)
+			for (int radio= 5;radio<13;radio++ ){
+				
+				criterios.add(new CriterioRGSimple(radio,K));
+				
+				for (int radioEntorno= 1;radioEntorno<6;radioEntorno++ ){
+					criterios.add(new CriterioRGEntorno(radio,K,radioEntorno));
+				}
+				for (int maxG= 254;maxG<255;maxG++ )
+					for (double pg =0.1;pg<0.2;pg=pg+0.1)
+						criterios.add(new CriterioRGGradiente(radio,K,pg,maxG));
+						
+			}	
 			
 		RegionGrowing rG = new RegionGrowing(this.handImage,this.handImageFiltered,ImagesData.imagesB,criterios);
 		rG.start();
@@ -1340,20 +1341,7 @@ public class MainFrame extends javax.swing.JFrame {
 		handImage.deleteSeeds();
 	
 	}
-	private void jMenuItemEnlargeCircleActionPerformed(ActionEvent evt) {
-		
-		EnlargeCircle e = new EnlargeCircle(handImage,1,handImage.getImage(),handImage.getCirclePoints());
-		e.run();
-		if (handImage!=null){
-			handImage.setNormales(e.getNormales());
-			handImage.setCirclePointsEnlarge(e.getNewCircle());
-			handImage.setCirclePointsReduce(e.getReduceCircle());
-			handImage.setImage();
-		
-		}
-		
-		
-	}
+
 	
 	private void handImageMouseMoved(MouseEvent evt) {
 		jLabelXY.setText("x: "+evt.getX()+" y: "+evt.getY());
@@ -1377,7 +1365,7 @@ public class MainFrame extends javax.swing.JFrame {
 				}
 			}
 			SaveFile sv=new SaveFile(file.getAbsolutePath());
-			sv.save(handImage.getCirclePoints());
+			sv.save(handImage.getInitCircle().getCirclePoints());
 		}
 		
 	}
@@ -1450,6 +1438,11 @@ public class MainFrame extends javax.swing.JFrame {
 			load3DMenuItemActionPerformed(null);
 		}
 		
+	}
+	private void jMenuItemEnlargeCircleManualyActionPerformed(ActionEvent evt) {
+		
+		EnlargeManualyDialog e= new EnlargeManualyDialog(this,this.handImage);
+		e.setVisible(true);
 	}
 
 }

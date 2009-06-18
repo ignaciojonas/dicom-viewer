@@ -1,17 +1,24 @@
 package ui;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.SpinnerListModel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.BevelBorder;
 
 import data.ImagesData;
+import draw2D.AllCirclesOnScreen;
 import draw2D.filtering.MeanFilter;
 import draw2D.filtering.MedianFilter;
 
@@ -28,7 +35,7 @@ import draw2D.filtering.MedianFilter;
 * THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
 * LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
 */
-public class EnlargeDialog extends javax.swing.JDialog {
+public class EnlargeManualyDialog extends javax.swing.JDialog {
 	
 	{
 		//Set Look & Feel
@@ -41,13 +48,20 @@ public class EnlargeDialog extends javax.swing.JDialog {
 
 	private JLabel jLabel1;
 	private JButton jButton1;
+	private JPanel normalColorPanel;
+	public Color normalColor = Color.WHITE ;
 	private JSpinner jSpinner1;
 
 	private JSpinner jSpinner2;
 	private JLabel jLabel2;
-	public EnlargeDialog(JFrame frame) {
+	private HandImage handImage;
+	private AllCirclesOnScreen allCircles;
+	
+	public EnlargeManualyDialog(JFrame frame,HandImage handImage) {
 		super(frame);
-		this.setTitle("Enlarge Set");
+		this.setTitle("Enlarge Manualy");
+		this.handImage = handImage;
+		this.allCircles = handImage.getAllCircles();
 		initGUI();
 	}
 	
@@ -91,9 +105,21 @@ public class EnlargeDialog extends javax.swing.JDialog {
 				jSpinner2.setValue(ImagesData.MAX_DISTANCE_NEIG);
 				jSpinner2.setBounds(120, 53, 39, 19);
 			}
+			{
+				normalColorPanel = new JPanel();
+				getContentPane().add(normalColorPanel);
+				normalColorPanel.setBounds(170, 137, 23, 20);
+				normalColorPanel.setBackground(this.normalColor);
+				normalColorPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+				normalColorPanel.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent evt) {
+						jPanel1MouseClicked(evt);
+					}
+				});
+			}
 			this.setResizable(false);
 			this.setLocationRelativeTo(null);
-			this.setSize(196, 168);
+			this.setSize(530, 275);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -106,6 +132,10 @@ public class EnlargeDialog extends javax.swing.JDialog {
 
 		
 	
+	}
+	
+	private void jPanel1MouseClicked(MouseEvent evt) {
+		new DialogColor(this,normalColor,normalColorPanel);
 	}
 
 }

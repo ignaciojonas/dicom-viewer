@@ -34,8 +34,8 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import data.io.DicomProperties;
 import data.io.OpenDicom;
 import data.io.OpenDicomDir;
+import draw2D.filtering.MeanFilter;
 
-import filtering.MeanFilter;
 
 public class ImagesData {
 	public static Vector<BufferedImage> imagesB = new Vector<BufferedImage>();

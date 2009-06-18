@@ -12,8 +12,8 @@ import javax.swing.SpinnerListModel;
 import javax.swing.SwingUtilities;
 
 import data.ImagesData;
-import filtering.MeanFilter;
-import filtering.MedianFilter;
+import draw2D.filtering.MeanFilter;
+import draw2D.filtering.MedianFilter;
 
 
 /**
