@@ -27,15 +27,15 @@ public class DialogColor extends javax.swing.JDialog {
 	private JButton choose;
 
 	private JPanel panel;
-	EnlargeManualyDialog enlargeManualyDialog;
-	Color color;
+	EnlargeManualyDialog enlargeManualyDialog=null;
+	EnlargeDialog enlargeDialog = null;
 	JPanel panelColor;
-	public DialogColor(EnlargeManualyDialog enlargeManualyDialog,Color color, JPanel panelColor) {
+	public DialogColor(EnlargeManualyDialog enlargeManualyDialog, JPanel panelColor) {
 		
 		super();
 		this.panel=new JPanel();
 		this.enlargeManualyDialog = enlargeManualyDialog;
-		this.color = color;
+		
 		this.panelColor = panelColor;
 		initGUI();
 		this.setTitle("Choose Color");
@@ -47,6 +47,24 @@ public class DialogColor extends javax.swing.JDialog {
 		this.setVisible(true);
 		
 
+	}
+
+
+	public DialogColor(EnlargeDialog enlargeDialog, JPanel panelColor) {
+		super();
+		this.panel=new JPanel();
+		this.enlargeDialog = enlargeDialog;
+		
+		this.panelColor = panelColor;
+		initGUI();
+		this.setTitle("Choose Color");
+		this.pack();
+		this.setSize(424, 362);
+		this.setResizable(false);
+		this.setLocationRelativeTo(null);
+		this.setModal(true);
+		this.setVisible(true);
+		
 	}
 
 
@@ -81,8 +99,7 @@ public class DialogColor extends javax.swing.JDialog {
 	
 	private void chooseMouseClicked(MouseEvent evt) {
 		panel.setBackground(jColorChooser.getColor());
-		color =jColorChooser.getColor();
-		panelColor.setBackground(color);
+		panelColor.setBackground(jColorChooser.getColor());
 		this.dispose();
 		
 	}

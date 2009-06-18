@@ -1,5 +1,7 @@
 package data;
 
+import java.awt.Color;
+
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JTable;
@@ -23,12 +25,10 @@ public class VisualData {
 	public static  boolean viewCircle = true;
 	public static boolean viewCircleAll = true;
 
-/*	
-	public static void setjLabelFPS(String text){
-		if(jLabelFPS!=null)
-			jLabelFPS.setText(text);
-	}
-	*/
+	public static Color initColor = Color.RED;
+	public static Color enlargeColor = Color.GREEN;
+	public static Color reduceColor = Color.CYAN;
+	public static Color normal = Color.WHITE;
 	
 	public static void setjLabelSBImages(String text){
 		if(jLabelSBImages!=null)

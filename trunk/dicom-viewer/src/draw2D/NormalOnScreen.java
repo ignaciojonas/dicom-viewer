@@ -12,6 +12,9 @@ public class NormalOnScreen {
 	private Vector<Line> normales = new Vector<Line>();
 	private Color color = Color.WHITE;
 	
+	public void setColor(Color color) {
+		this.color = color;
+	}
 	public NormalOnScreen(Vector<Line> normales) {
 		this.normales = normales;
 	}

@@ -1,17 +1,24 @@
 package ui;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.SpinnerListModel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.BevelBorder;
 
 import data.ImagesData;
+import data.VisualData;
 import draw2D.filtering.MeanFilter;
 import draw2D.filtering.MedianFilter;
 
@@ -41,6 +48,29 @@ public class EnlargeDialog extends javax.swing.JDialog {
 
 	private JLabel jLabel1;
 	private JButton jButton1;
+	private JLabel jLabel5;
+	private JPanel normalColorPanel;
+	private JPanel enlargeColorPanel;
+	private JPanel reduceColorPanel;
+	private JPanel initColorPanel;
+	
+
+	public Color normalColor = VisualData.normal ;
+	
+	
+	public Color initColor = VisualData.initColor;
+	
+
+	public Color enlargeColor = VisualData.enlargeColor ;
+	
+	
+	public Color reduceColor = VisualData.reduceColor;
+	
+	
+	private JLabel jLabel3;
+	private JLabel jLabel4;
+	private JLabel jLabel6;
+	private JPanel jPanel2;
 	private JSpinner jSpinner1;
 
 	private JSpinner jSpinner2;
@@ -91,9 +121,87 @@ public class EnlargeDialog extends javax.swing.JDialog {
 				jSpinner2.setValue(ImagesData.MAX_DISTANCE_NEIG);
 				jSpinner2.setBounds(120, 53, 39, 19);
 			}
+			{
+				jLabel6 = new JLabel();
+				getContentPane().add(jLabel6);
+				jLabel6.setText("Normal Color:");
+				jLabel6.setBounds(213, 106, 80, 14);
+			}
+			{
+				jLabel5 = new JLabel();
+				getContentPane().add(jLabel5);
+				jLabel5.setText("Reduce Color:");
+				jLabel5.setBounds(210, 79, 80, 14);
+			}
+			{
+				jLabel4 = new JLabel();
+				getContentPane().add(jLabel4);
+				jLabel4.setText("Init Color:");
+				jLabel4.setBounds(229, 23, 80, 14);
+			}
+			{
+				jLabel3 = new JLabel();
+				getContentPane().add(jLabel3);
+				jLabel3.setText("Enlarge Color:");
+				jLabel3.setBounds(210, 51, 80, 14);
+			}
+			{
+				initColorPanel = new JPanel();
+				getContentPane().add(initColorPanel);
+				initColorPanel.setBackground(this.initColor);
+				initColorPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+				initColorPanel.setBounds(283, 19, 23, 20);
+				initColorPanel.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent evt) {
+						initColorPanelMouseClicked(evt);
+					}
+				});
+			}
+			{
+				reduceColorPanel = new JPanel();
+				getContentPane().add(reduceColorPanel);
+				reduceColorPanel.setBackground(this.reduceColor);
+				reduceColorPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+				reduceColorPanel.setBounds(283, 76, 23, 20);
+				reduceColorPanel.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent evt) {
+						reduceColorPanelMouseClicked(evt);
+					}
+				});
+			}
+			{
+				enlargeColorPanel = new JPanel();
+				getContentPane().add(enlargeColorPanel);
+				enlargeColorPanel.setBackground(this.enlargeColor);
+				enlargeColorPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+				enlargeColorPanel.setBounds(283, 48, 23, 20);
+				enlargeColorPanel.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent evt) {
+						enlargeColorPanelMouseClicked(evt);
+					}
+				});
+			}
+			{
+				normalColorPanel = new JPanel();
+				getContentPane().add(normalColorPanel);
+				normalColorPanel.setBackground(this.normalColor);
+				normalColorPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+				normalColorPanel.setBounds(283, 104, 23, 20);
+				normalColorPanel.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent evt) {
+						jPanel1MouseClicked(evt);
+					}
+				});
+			}
+			{
+				jPanel2 = new JPanel();
+				getContentPane().add(jPanel2);
+				jPanel2.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
+				jPanel2.setBounds(184, 16, 137, 120);
+			}
 			this.setResizable(false);
 			this.setLocationRelativeTo(null);
-			this.setSize(196, 168);
+			this.setSize(341, 178);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -103,9 +211,23 @@ public class EnlargeDialog extends javax.swing.JDialog {
 
 		ImagesData.MAX_DISTANCE=((Integer) jSpinner1.getValue());
 		ImagesData.MAX_DISTANCE_NEIG=((Integer) jSpinner2.getValue());
-
-		
+		VisualData.enlargeColor = enlargeColorPanel.getBackground();
+		VisualData.reduceColor = reduceColorPanel.getBackground();
+		VisualData.normal = normalColorPanel.getBackground();
+		VisualData.initColor = initColorPanel.getBackground();
 	
+	}
+	private void jPanel1MouseClicked(MouseEvent evt) {
+		new DialogColor(this,normalColorPanel);
+	}
+	private void enlargeColorPanelMouseClicked(MouseEvent evt) {
+		new DialogColor(this,enlargeColorPanel);
+	}
+	private void reduceColorPanelMouseClicked(MouseEvent evt) {
+		new DialogColor(this,reduceColorPanel);
+	}
+	private void initColorPanelMouseClicked(MouseEvent evt) {
+		new DialogColor(this,initColorPanel);
 	}
 
 }

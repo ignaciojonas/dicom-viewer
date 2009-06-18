@@ -20,6 +20,7 @@ import data.io.DicomProperties;
 import draw2D.AllCirclesOnScreen;
 import draw2D.CircleOnScreen;
 import draw2D.InitCircleOnScreen;
+import draw2D.NormalOnScreen;
 import draw2D.filtering.EnlargeCircle;
 import draw3D.Line;
 import draw3D.Mesh;
@@ -132,9 +133,9 @@ private void drawSeeds(Graphics g){
 }
 
 
-private void drawInitCircle(Graphics g){
+public void drawInitCircle(){
 	if (VisualData.viewCircle)
-		initCircle.draw(g);
+		initCircle.draw(this.getGraphics());
 }
 public void update (Graphics g){
 	
@@ -143,7 +144,7 @@ public void update (Graphics g){
 	g.drawImage(image, 0, 0, this);
 	drawSeeds(g);
 	allCircles.draw(g, index);
-	drawInitCircle(g);
+	//drawInitCircle(g);
 
 }
 
@@ -170,7 +171,7 @@ public void setImage() {
 		}
 	drawSeeds(this.getGraphics());
 	allCircles.draw(this.getGraphics(), index);
-	drawInitCircle(this.getGraphics());
+	//drawInitCircle(this.getGraphics());
 }
 
 public void nextImage(){
@@ -211,12 +212,72 @@ public void deleteSeeds() {
 public void enlargeCircleForAll(){
 	for(int i=0;i<imagesB.size();i++){
 		EnlargeCircle e = new EnlargeCircle(this,1,imagesB.get(i),this.initCircle);
-		allCircles.add(e.enlargeCircle(), e.getReduceCircle(), this.initCircle);
+		CircleOnScreen enl = e.enlargeCircle();
+		enl.setColor(VisualData.enlargeColor);
+		
+		
+		CircleOnScreen redu = e.getReduceCircle();
+		redu.setColor(VisualData.reduceColor);
+		
+		NormalOnScreen norm = getNormalOnScreen(this.initCircle, enl);
+		norm.setColor(VisualData.normal);
+		
+		this.initCircle.setColor(VisualData.initColor);
+		
+		allCircles.add(enl,redu,this.initCircle,norm);
 		
 	}
 }
 
+public void enlargeCircle(int index,Color initColor,Color enlargeColor,Color reduceColor,Color normal){
+	EnlargeCircle e = new EnlargeCircle(this,1,imagesB.get(index),this.initCircle);
+	
+	CircleOnScreen enl = e.enlargeCircle();
+	enl.setColor(enlargeColor);
+	
+	
+	CircleOnScreen redu = e.getReduceCircle();
+	redu.setColor(reduceColor);
+	
+	NormalOnScreen norm = getNormalOnScreen(this.initCircle, enl);
+	norm.setColor(normal);
+	
+	this.initCircle.setColor(initColor);
+	
+	allCircles.add(enl,redu,this.initCircle,norm );
+	
+}
 
+public void previewCircle(int index,Color initColor,Color enlargeColor,Color reduceColor,Color normal){
+	EnlargeCircle e = new EnlargeCircle(this,1,imagesB.get(index),this.initCircle);
+	
+	CircleOnScreen aux = e.enlargeCircle();
+	aux.setColor(enlargeColor);
+	
+	CircleOnScreen aux2 = e.getReduceCircle();
+	aux2.setColor(reduceColor);
+	
+	NormalOnScreen aux3 = getNormalOnScreen(this.initCircle, aux);
+	aux3.setColor(normal);
+	
+	aux3.draw(this.getGraphics());
+	aux.draw(this.getGraphics());
+	aux2.draw(this.getGraphics());
+	
+	
+	this.initCircle.setColor(initColor);
+	this.initCircle.draw(this.getGraphics());
+}
+
+private NormalOnScreen getNormalOnScreen(InitCircleOnScreen init, CircleOnScreen enlarge) {
+	 Vector<Line> normals = new Vector<Line>();
+	 Vector<Point> in = init.getCirclePoints();
+	 Vector<Point> en = enlarge.getCirclePoints();
+	 for(int i=0;i<enlarge.getCantPoints();i++){
+		 normals.add(new Line(in.get(i),en.get(i))); 
+	 }
+	 return new NormalOnScreen(normals);
+}
 
 public void generateMesh(){
 	Mesh mesh = new Mesh();

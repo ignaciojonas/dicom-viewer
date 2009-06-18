@@ -19,10 +19,13 @@ public class AllCirclesOnScreen {
 	}
 	 public void draw(Graphics g, int index){
 		if ((VisualData.viewCircleAll)&&(size()>0)){
-			circleAllPointsEnlarge.get(index).draw(g);
-			circleAllPointsReduce.get(index).draw(g);
-			circleAllPointsInit.get(index).draw(g);
-			circleAllNormales.get(index).draw(g);
+			try{
+				circleAllNormales.get(index).draw(g);
+				circleAllPointsEnlarge.get(index).draw(g);
+				circleAllPointsReduce.get(index).draw(g);
+				circleAllPointsInit.get(index).draw(g);
+				
+			}catch(Exception e){}
 		}
 	 }
 	
@@ -32,6 +35,13 @@ public class AllCirclesOnScreen {
 		 circleAllPointsInit.add(init);
 		 circleAllNormales.add(getNormalOnScreen(init,enlarge));
 	 }
+	 public void add(CircleOnScreen enl, CircleOnScreen redu,InitCircleOnScreen initCircle, NormalOnScreen norm) {
+		 circleAllPointsEnlarge.add(enl);
+		 circleAllPointsReduce.add(redu);
+		 circleAllPointsInit.add(initCircle);
+		 circleAllNormales.add(norm);
+			
+	}
 	 
 	 private NormalOnScreen getNormalOnScreen(InitCircleOnScreen init, CircleOnScreen enlarge) {
 		 Vector<Line> normals = new Vector<Line>();
@@ -48,4 +58,6 @@ public class AllCirclesOnScreen {
 	 public CircleOnScreen getEnlargeCircle(int i){
 		 return circleAllPointsEnlarge.get(i);
 	 }
+	
+	
 }

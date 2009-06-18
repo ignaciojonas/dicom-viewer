@@ -369,6 +369,7 @@ public class MainFrame extends javax.swing.JFrame {
 							getContentPane().add(handImage);
 							jScrollPane1.setViewportView(handImage);
 							handImage.addMouseMotionListener(new MouseMotionAdapter() {
+								
 								public void mouseMoved(MouseEvent evt) {
 									handImageMouseMoved(evt);
 								}
@@ -1477,5 +1478,7 @@ public class MainFrame extends javax.swing.JFrame {
 		EnlargeManualyDialog e= new EnlargeManualyDialog(this,this.handImage);
 		e.setVisible(true);
 	}
+	
+
 
 }
