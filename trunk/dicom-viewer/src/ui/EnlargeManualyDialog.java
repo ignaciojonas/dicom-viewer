@@ -48,8 +48,19 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 
 	private JLabel jLabel1;
 	private JButton jButton1;
+	
 	private JPanel normalColorPanel;
 	public Color normalColor = Color.WHITE ;
+	
+	private JPanel initColorPanel;
+	public Color initColor = Color.RED ;
+	
+	private JPanel enlargeColorPanel;
+	public Color enlargeColor = Color.GREEN ;
+	
+	private JPanel reduceColorPanel;
+	public Color reduceColor = Color.CYAN ;
+	
 	private JSpinner jSpinner1;
 
 	private JSpinner jSpinner2;
@@ -117,9 +128,45 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 					}
 				});
 			}
+			{
+				enlargeColorPanel = new JPanel();
+				getContentPane().add(enlargeColorPanel);
+				enlargeColorPanel.setBounds(170, 173, 23, 20);
+				enlargeColorPanel.setBackground(this.enlargeColor);
+				enlargeColorPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+				enlargeColorPanel.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent evt) {
+						enlargeColorPanelMouseClicked(evt);
+					}
+				});
+			}
+			{
+				reduceColorPanel = new JPanel();
+				getContentPane().add(reduceColorPanel);
+				reduceColorPanel.setBounds(170, 213, 23, 20);
+				reduceColorPanel.setBackground(this.reduceColor);
+				reduceColorPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+				reduceColorPanel.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent evt) {
+						reduceColorPanelMouseClicked(evt);
+					}
+				});
+			}
+			{
+				initColorPanel = new JPanel();
+				getContentPane().add(initColorPanel);
+				initColorPanel.setBounds(170, 253, 23, 20);
+				initColorPanel.setBackground(this.initColor);
+				initColorPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+				initColorPanel.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent evt) {
+						initColorPanelMouseClicked(evt);
+					}
+				});
+			}
 			this.setResizable(false);
 			this.setLocationRelativeTo(null);
-			this.setSize(530, 275);
+			this.setSize(540, 339);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -137,5 +184,14 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 	private void jPanel1MouseClicked(MouseEvent evt) {
 		new DialogColor(this,normalColor,normalColorPanel);
 	}
-
+	private void enlargeColorPanelMouseClicked(MouseEvent evt) {
+		new DialogColor(this,enlargeColor,enlargeColorPanel);
+	}
+	private void reduceColorPanelMouseClicked(MouseEvent evt) {
+		new DialogColor(this,reduceColor,reduceColorPanel);
+	}
+	private void initColorPanelMouseClicked(MouseEvent evt) {
+		new DialogColor(this,initColor,initColorPanel);
+	}
+	
 }
