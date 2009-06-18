@@ -35,7 +35,24 @@ public class AllCirclesOnScreen {
 		 circleAllPointsInit.add(init);
 		 circleAllNormales.add(getNormalOnScreen(init,enlarge));
 	 }
+	 public void add(CircleOnScreen enl, CircleOnScreen redu,InitCircleOnScreen initCircle, NormalOnScreen norm, int index) {
+		 try{
+		 circleAllPointsEnlarge.remove(index);
+		 circleAllPointsReduce.remove(index);
+		 circleAllPointsInit.remove(index);
+		 circleAllNormales.remove(index);
+		 }catch(Exception e){}
+		 
+		 circleAllPointsEnlarge.add(index,enl);
+		 circleAllPointsReduce.add(index,redu);
+		 circleAllPointsInit.add(index,initCircle);
+		 circleAllNormales.add(index,norm);
+			
+	}
+	 
 	 public void add(CircleOnScreen enl, CircleOnScreen redu,InitCircleOnScreen initCircle, NormalOnScreen norm) {
+		
+		 
 		 circleAllPointsEnlarge.add(enl);
 		 circleAllPointsReduce.add(redu);
 		 circleAllPointsInit.add(initCircle);

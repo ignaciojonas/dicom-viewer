@@ -12,6 +12,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -230,7 +231,7 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 				jButtonOpen = new JButton();
 				getContentPane().add(jButtonOpen);
 				jButtonOpen.setText("Open Circle");
-				jButtonOpen.setBounds(204, 160, 112, 23);
+				jButtonOpen.setBounds(204, 142, 112, 23);
 				jButtonOpen.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/opencircle.gif")));
 				jButtonOpen.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent evt) {
@@ -242,7 +243,7 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 				jButtonDelete = new JButton();
 				getContentPane().add(jButtonDelete);
 				jButtonDelete.setText("DeleteCircle");
-				jButtonDelete.setBounds(204, 134, 112, 23);
+				jButtonDelete.setBounds(204, 204, 112, 23);
 				jButtonDelete.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/deleteCircle.gif")));
 				jButtonDelete.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent evt) {
@@ -254,7 +255,7 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 				jButtonPreview = new JButton();
 				getContentPane().add(jButtonPreview);
 				jButtonPreview.setText("Preview");
-				jButtonPreview.setBounds(22, 120, 71, 23);
+				jButtonPreview.setBounds(22, 142, 71, 23);
 				jButtonPreview.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent evt) {
 						jButtonPreviewMouseClicked(evt);
@@ -265,7 +266,7 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 				jButtonClean = new JButton();
 				getContentPane().add(jButtonClean);
 				jButtonClean.setText("Clean");
-				jButtonClean.setBounds(99, 120, 59, 23);
+				jButtonClean.setBounds(103, 142, 59, 23);
 				jButtonClean.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent evt) {
 						jButtonCleanMouseClicked(evt);
@@ -275,7 +276,7 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 			{
 				jButtonOK = new JButton();
 				getContentPane().add(jButtonOK);
-				jButtonOK.setBounds(70, 149, 50, 38);
+				jButtonOK.setBounds(73, 171, 50, 38);
 				jButtonOK.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/forward.gif")));
 				jButtonOK.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent evt) {
@@ -288,7 +289,7 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 				getContentPane().add(jButton2);
 				jButton2.setText("Save Circle");
 				jButton2.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/savecircle.gif")));
-				jButton2.setBounds(204, 189, 112, 23);
+				jButton2.setBounds(204, 175, 112, 23);
 				jButton2.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent evt) {
 						jButton2MouseClicked(evt);
@@ -296,7 +297,7 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 				});
 			}
 			this.setResizable(false);
-			this.setLocationRelativeTo(null);
+			this.setLocation(850, 100);
 			this.setSize(363, 265);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -358,7 +359,7 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 	}
 	
 	private void jButtonOKMouseClicked(MouseEvent evt) {
-		handImage.enlargeCircle(handImage.getIndex(),initColorPanel.getBackground(),enlargeColorPanel.getBackground(),reduceColorPanel.getBackground(),normalColorPanel.getBackground());
+		handImage.enlargeCircle(initColorPanel.getBackground(),enlargeColorPanel.getBackground(),reduceColorPanel.getBackground(),normalColorPanel.getBackground());
 		handImage.nextImage();
 		handImage.drawInitCircle();
 	}
@@ -384,5 +385,7 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 			sv.save(handImage.getInitCircle().getCirclePoints());
 		}
 	}
+	
+
 
 }

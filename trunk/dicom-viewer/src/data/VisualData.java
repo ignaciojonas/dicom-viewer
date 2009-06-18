@@ -21,7 +21,7 @@ public class VisualData {
 	
 	public static  JTable jTable1=null;
 	public static  boolean viewDicomProperties = false;
-	public static  boolean viewSeeds = true;
+	public static  boolean viewSeeds = false;
 	public static  boolean viewCircle = true;
 	public static boolean viewCircleAll = true;
 

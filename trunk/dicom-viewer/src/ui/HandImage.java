@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -144,7 +145,7 @@ public void update (Graphics g){
 	g.drawImage(image, 0, 0, this);
 	drawSeeds(g);
 	allCircles.draw(g, index);
-	//drawInitCircle(g);
+	drawInitCircle();
 
 }
 
@@ -171,7 +172,7 @@ public void setImage() {
 		}
 	drawSeeds(this.getGraphics());
 	allCircles.draw(this.getGraphics(), index);
-	//drawInitCircle(this.getGraphics());
+	drawInitCircle();
 }
 
 public void nextImage(){
@@ -212,24 +213,26 @@ public void deleteSeeds() {
 public void enlargeCircleForAll(){
 	for(int i=0;i<imagesB.size();i++){
 		EnlargeCircle e = new EnlargeCircle(this,1,imagesB.get(i),this.initCircle);
+		
 		CircleOnScreen enl = e.enlargeCircle();
 		enl.setColor(VisualData.enlargeColor);
-		
-		
+				
 		CircleOnScreen redu = e.getReduceCircle();
 		redu.setColor(VisualData.reduceColor);
 		
 		NormalOnScreen norm = getNormalOnScreen(this.initCircle, enl);
 		norm.setColor(VisualData.normal);
 		
+		
 		this.initCircle.setColor(VisualData.initColor);
+		
 		
 		allCircles.add(enl,redu,this.initCircle,norm);
 		
 	}
 }
 
-public void enlargeCircle(int index,Color initColor,Color enlargeColor,Color reduceColor,Color normal){
+public void enlargeCircle(Color initColor,Color enlargeColor,Color reduceColor,Color normal){
 	EnlargeCircle e = new EnlargeCircle(this,1,imagesB.get(index),this.initCircle);
 	
 	CircleOnScreen enl = e.enlargeCircle();
@@ -239,12 +242,26 @@ public void enlargeCircle(int index,Color initColor,Color enlargeColor,Color red
 	CircleOnScreen redu = e.getReduceCircle();
 	redu.setColor(reduceColor);
 	
-	NormalOnScreen norm = getNormalOnScreen(this.initCircle, enl);
+	
+	
+	Vector <Point> aux = new Vector<Point>();
+	Vector <Point> iniAux = this.initCircle.getCirclePoints();
+	Point p;
+	for(int i = 0;i<this.initCircle.getCantPoints();i++){
+		p= iniAux.get(i);
+		aux.add(new Point(p.x,p.y));
+	}
+	
+	
+	
+	InitCircleOnScreen init = new InitCircleOnScreen(aux,initColor);
+	
+	NormalOnScreen norm = getNormalOnScreen(init, enl);
 	norm.setColor(normal);
 	
-	this.initCircle.setColor(initColor);
+	allCircles.add(enl,redu,init,norm,index );
 	
-	allCircles.add(enl,redu,this.initCircle,norm );
+
 	
 }
 
@@ -280,6 +297,7 @@ private NormalOnScreen getNormalOnScreen(InitCircleOnScreen init, CircleOnScreen
 }
 
 public void generateMesh(){
+	
 	Mesh mesh = new Mesh();
 	
 	float div= 90.0f;
@@ -290,6 +308,10 @@ public void generateMesh(){
 	CircleOnScreen aux = allCircles.getEnlargeCircle(0);
 	int circleSize = aux.getCantPoints();
 	
+	VisualData.jProgressBar.setMaximum(size);
+	 VisualData.jProgressBar.setValue(0);
+	 VisualData.jProgressBar.setStringPainted(true);
+	 
 	//Mesh.points.add(new Point3D(-1,-1,-1));//Se agrega para que la numeracion comience de 1
 	for (int i = 0;i<size;i++){
 		aux = allCircles.getEnlargeCircle(i);
@@ -304,10 +326,16 @@ public void generateMesh(){
 			cantp++;
 		}
 		dist+=0.3f;
+		VisualData.jProgressBar.setValue(i);  
+    	VisualData.jProgressBar.repaint();
 	}
 	Mesh.cantPoints3D = cantp-1;
 	Mesh.generateTriangles(circleSize,size);
-		
+	System.gc();
+	VisualData.jProgressBar.setValue(size);
+	VisualData.jProgressBar.repaint();
+	
+	JOptionPane.showMessageDialog(null,"Mesh generate succefuly","Confirm",JOptionPane.INFORMATION_MESSAGE);
 }
 
 
