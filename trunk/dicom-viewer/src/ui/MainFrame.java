@@ -57,6 +57,7 @@ import data.io.OpenSUR;
 import data.io.SaveFile;
 import data.io.SaveFilteredImages;
 import data.io.SaveMeshSur;
+import draw2D.InitCircleOnScreen;
 import draw2D.filtering.EnlargeCircle;
 import draw2D.filtering.MeanFilter;
 import draw2D.filtering.RegionGrowing;
@@ -168,6 +169,8 @@ public class MainFrame extends javax.swing.JFrame {
 	private HandImage handImage;
 	private HandImage handImageFiltered;
 	
+	//Mover el circulo
+	private Point origen;
 
 	/**
 	* Auto-generated main method to display this JFrame
@@ -374,7 +377,18 @@ public class MainFrame extends javax.swing.JFrame {
 								public void mouseClicked(MouseEvent evt) {
 									handImageMouseClicked(evt);
 								}
+								
+								
 							});
+							handImage.addMouseMotionListener(new MouseMotionAdapter() {
+
+								public void mouseDragged(MouseEvent e) {
+									handImageMouseDragged(e);
+								}
+								
+								
+							});
+							
 						}
 					}
 					{
@@ -657,7 +671,7 @@ public class MainFrame extends javax.swing.JFrame {
 						jCheckBoxMenuItemSeeds = new JCheckBoxMenuItem();
 						jMenu4.add(jCheckBoxMenuItemSeeds);
 						jCheckBoxMenuItemSeeds.setText("View Seeds");
-						jCheckBoxMenuItemSeeds.setSelected(true);
+						jCheckBoxMenuItemSeeds.setSelected(false);
 						jCheckBoxMenuItemSeeds.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent evt) {
 								viewSeedsMenuItemActionPerformed(evt);
@@ -964,6 +978,8 @@ public class MainFrame extends javax.swing.JFrame {
 	}
 	
 	
+	
+
 	protected void saveFilesActionPerformed(ActionEvent evt) {
 		// TODO Auto-generated method stub
 		SaveFilteredImages sf;
@@ -1207,7 +1223,6 @@ public class MainFrame extends javax.swing.JFrame {
 	}
 	
 	private void handImageMouseClicked(MouseEvent evt) {
-	
 		if (evt.getButton()== MouseEvent.BUTTON1){
 			if (ImagesData.imagesB.size()>0)
 				handImage.addSeed(new Point (evt.getX(),evt.getY()));
@@ -1215,9 +1230,27 @@ public class MainFrame extends javax.swing.JFrame {
 		if (evt.getButton()== MouseEvent.BUTTON3){
 				handImage.addPointToInitCircle(new Point (evt.getX(),evt.getY()));
 		}
-		
 	}
 
+	protected void handImageMouseDragged(MouseEvent evt) {
+		InitCircleOnScreen circle=handImage.getInitCircle();
+		if(origen!=null){
+			int x_origen= origen.x;
+			int y_origen= origen.y;
+			int sum_x=evt.getX()-x_origen;
+			int sum_y=evt.getY()-y_origen;
+			circle.sumarXY(sum_x, sum_y);
+			handImage.setImage();
+			origen = new Point(evt.getX(),evt.getY());
+			
+		}
+		else{
+			if(circle.isSelected(evt.getX(), evt.getY())){
+				origen = new Point(evt.getX(),evt.getY());
+			}
+		}
+		
+	}
 
 	public void filterRGMenuItemActionPerformed(ActionEvent evt) {
 		RGDialog rG= new RGDialog(this,jTabbedPane1,handImageFiltered,handImage);

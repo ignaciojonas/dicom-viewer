@@ -2,10 +2,15 @@ package draw2D;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.Iterator;
 import java.util.Vector;
 
 public class InitCircleOnScreen extends CircleOnScreen{
-
+	private int x_min=Integer.MAX_VALUE;
+	private int x_max=Integer.MIN_VALUE;
+	private int y_min=Integer.MAX_VALUE;
+	private int y_max=Integer.MIN_VALUE;
+	
 	public InitCircleOnScreen(Vector<Point> circlePoints, Color red) {
 		super(circlePoints,red);
 	}
@@ -126,6 +131,43 @@ public class InitCircleOnScreen extends CircleOnScreen{
 			
 		}
 		
+	}
+	
+	public boolean isSelected(int x, int y){
+		if(x_min==Integer.MAX_VALUE){
+			for (Iterator iterator = circlePoints.iterator(); iterator.hasNext();) {
+				Point p = (Point) iterator.next();
+				if(p.x<x_min){
+					x_min=p.x;
+				}
+				else{
+					if(p.x>x_max){
+						x_max=p.x;
+					}
+				}
+				if(p.y<y_min){
+					y_min=p.y;
+				}
+				else{
+					if(p.y>y_max){
+						y_max=p.y;
+					}
+				}
+			}
+		}
+		if((x>x_min)&&(x<x_max)&&(y>y_min)&&(y<y_max)){
+			return true;
+		}
+		return false;
+	}
+	
+	public void sumarXY(int x, int y){
+		for (Iterator iterator = circlePoints.iterator(); iterator.hasNext();) {
+			Point p = (Point) iterator.next();
+			int nuevoX=p.x+x;
+			int nuevoY=p.y+y;
+			p.setLocation(nuevoX, nuevoY);
+		}
 	}
 
 }
