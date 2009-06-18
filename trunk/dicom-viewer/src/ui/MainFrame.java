@@ -60,15 +60,15 @@ import data.io.SaveMeshSur;
 import draw2D.filtering.EnlargeCircle;
 import draw2D.filtering.MeanFilter;
 import draw2D.filtering.RegionGrowing;
+import draw2D.filtering.rg.Criterio;
+import draw2D.filtering.rg.CriterioRGEntorno;
+import draw2D.filtering.rg.CriterioRGGradiente;
+import draw2D.filtering.rg.CriterioRGSimple;
 import draw3D.Mesh;
 import draw3D.OpenGLCanvas;
 import draw3D.Setup3D;
 import draw3D.scenario.screen.Point3D;
 
-import filtering.rg.Criterio;
-import filtering.rg.CriterioRGEntorno;
-import filtering.rg.CriterioRGGradiente;
-import filtering.rg.CriterioRGSimple;
 
 /**
 * This code was edited or generated using CloudGarden's Jigloo

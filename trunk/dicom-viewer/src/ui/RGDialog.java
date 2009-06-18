@@ -23,11 +23,11 @@ import javax.swing.border.BevelBorder;
 import data.ImagesData;
 import draw2D.filtering.MeanFilter;
 import draw2D.filtering.RegionGrowing;
+import draw2D.filtering.rg.Criterio;
+import draw2D.filtering.rg.CriterioRGEntorno;
+import draw2D.filtering.rg.CriterioRGGradiente;
+import draw2D.filtering.rg.CriterioRGSimple;
 
-import filtering.rg.Criterio;
-import filtering.rg.CriterioRGEntorno;
-import filtering.rg.CriterioRGGradiente;
-import filtering.rg.CriterioRGSimple;
 
 
 /**
