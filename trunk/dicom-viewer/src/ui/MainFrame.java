@@ -129,6 +129,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private JMenuItem filterMeanMenuItem;
 	private JMenuItem filterMedianMenuItem;
 	private JMenuItem filterRGMenuItem;
+	private JMenuItem jMenuItemSaveProject;
 	private JMenu jMenu4;
 	private JMenuItem exitMenuItem;
 	private JSeparator jSeparator2;
@@ -164,6 +165,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private ThreadPlay tP=null;
 	private ThreadPlay tPFilter=null;
 	private JFileChooser filechooser = null;
+	private JMenuItem openProjectMenuItem;
 	
 	//Imagen
 	private HandImage handImage;
@@ -537,6 +539,22 @@ public class MainFrame extends javax.swing.JFrame {
 					jMenu3.setText("File");
 				
 					{
+						openProjectMenuItem = new JMenuItem();
+						jMenu3.add(openProjectMenuItem);
+						openProjectMenuItem.setText("Open Project");
+						openProjectMenuItem.setMnemonic('P');
+						openProjectMenuItem.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit
+								.getDefaultToolkit().getMenuShortcutKeyMask()));
+						openProjectMenuItem.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/openproject.gif")));
+						
+						openProjectMenuItem.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								openProjectMenuItemActionPerformed(evt);
+							}
+						});
+					}
+					
+					{
 						openFileMenuItem = new JMenuItem();
 						jMenu3.add(openFileMenuItem);
 						openFileMenuItem.setText("Open Files...");
@@ -577,6 +595,22 @@ public class MainFrame extends javax.swing.JFrame {
 							}
 						});
 					}
+					{
+						jSeparator2 = new JSeparator();
+						jMenu3.add(jSeparator2);
+					}
+					{
+						jMenuItemSaveProject = new JMenuItem();
+						jMenu3.add(jMenuItemSaveProject);
+						jMenuItemSaveProject.setText("Save Project");
+						jMenuItemSaveProject.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/saveproject.gif")));
+						jMenuItemSaveProject.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								saveProjectActionPerformed(evt);
+							}
+						});
+					}
+					
 					{
 						jMenuItemSaveFilters = new JMenuItem();
 						jMenu3.add(jMenuItemSaveFilters);
@@ -633,6 +667,21 @@ public class MainFrame extends javax.swing.JFrame {
 								}
 							});
 						
+						}
+						{
+							jSeparator2 = new JSeparator();
+							jMenu5.add(jSeparator2);
+						}
+						{
+							jMenuConfigEnlarge = new JMenuItem();
+							jMenu5.add(jMenuConfigEnlarge);
+							jMenuConfigEnlarge.setText("Config. Enlarge");
+							jMenuConfigEnlarge.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/configenlarge.gif")));
+							jMenuConfigEnlarge.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent evt) {
+									jMenuConfigEnlargeActionPerformed(evt);
+								}
+							});
 						}
 						
 						
@@ -780,21 +829,7 @@ public class MainFrame extends javax.swing.JFrame {
 							}
 						});
 					}
-					{
-						jSeparator2 = new JSeparator();
-						jMenu2D.add(jSeparator2);
-					}
-					{
-						jMenuConfigEnlarge = new JMenuItem();
-						jMenu2D.add(jMenuConfigEnlarge);
-						jMenuConfigEnlarge.setText("Config. Enlarge");
-						jMenuConfigEnlarge.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/configenlarge.gif")));
-						jMenuConfigEnlarge.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent evt) {
-								jMenuConfigEnlargeActionPerformed(evt);
-							}
-						});
-					}
+					
 					
 					
 
@@ -1479,6 +1514,11 @@ public class MainFrame extends javax.swing.JFrame {
 		e.setVisible(true);
 	}
 	
-
+	public void openProjectMenuItemActionPerformed(ActionEvent evt){
+		
+	}
+	public void saveProjectActionPerformed(ActionEvent evt){
+		
+	}
 
 }

@@ -344,6 +344,7 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 			LoadFile ld=new LoadFile(file.getAbsolutePath());
 			handImage.setCirclePoints(ld.load());
 			handImage.setImage();
+			handImage.setImage();
 		}
 	}
 	

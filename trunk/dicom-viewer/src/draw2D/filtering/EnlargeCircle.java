@@ -247,7 +247,6 @@ public class EnlargeCircle {
 				}else{
 					if ((size-i)==2){
 						reducePoint(newCircle.get(0),newCircle.get(i+1),newCircle.get(i));
-						
 					}else{
 						if((size-i)==1){
 							reducePoint(newCircle.get(1),newCircle.get(0),newCircle.get(i));
@@ -260,10 +259,7 @@ public class EnlargeCircle {
 	}
 	
 	private void reducePoint(Point p1,Point p2, Point p3){
-		if (p2.getX()>415){
-			System.out.println("x mayor a 425");
-			
-		}
+	
 		Normal normal= getVectorNormal(p1,p2,p3);
 		reduceCircle.add(normal.getNormalSubtract(p2,10));
 	}

@@ -100,9 +100,6 @@ public class ImagesData {
 	
 	}
 	
-
-	
-
 	public static void cloneImagesBToImagesFiltered() {
 		for (int i = 0; i < imagesB.size(); i++) {
 			imagesBFiltered.add(i,clon(imagesB.get(i)));

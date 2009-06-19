@@ -230,6 +230,7 @@ public void enlargeCircleForAll(){
 		allCircles.add(enl,redu,this.initCircle,norm);
 		
 	}
+	this.setImage();
 }
 
 public void enlargeCircle(Color initColor,Color enlargeColor,Color reduceColor,Color normal){
