@@ -15,7 +15,7 @@ public Encoder() {
 }
 
 
-    public static boolean encode(Vector<Point> mesh, String nameFile)
+    public static boolean encode(Project project, String nameFile)
     {
         try
         {
@@ -31,7 +31,7 @@ public Encoder() {
            	else
            		aux = aux +".xml" ;
            	faux = new FileWriter(aux);
-	        Marshaller.marshal(mesh, faux);
+	        Marshaller.marshal(project, faux);
 	        faux.close();
 	        return true;
            

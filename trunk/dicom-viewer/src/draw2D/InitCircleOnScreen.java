@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 public class InitCircleOnScreen extends CircleOnScreen{
+
 	private int x_min=Integer.MAX_VALUE;
 	private int x_max=Integer.MIN_VALUE;
 	private int y_min=Integer.MAX_VALUE;
@@ -169,5 +170,35 @@ public class InitCircleOnScreen extends CircleOnScreen{
 			p.setLocation(nuevoX, nuevoY);
 		}
 	}
+	public int getX_min() {
+		return x_min;
+	}
 
+	public void setX_min(int x_min) {
+		this.x_min = x_min;
+	}
+
+	public int getX_max() {
+		return x_max;
+	}
+
+	public void setX_max(int x_max) {
+		this.x_max = x_max;
+	}
+
+	public int getY_min() {
+		return y_min;
+	}
+
+	public void setY_min(int y_min) {
+		this.y_min = y_min;
+	}
+
+	public int getY_max() {
+		return y_max;
+	}
+
+	public void setY_max(int y_max) {
+		this.y_max = y_max;
+	}
 }

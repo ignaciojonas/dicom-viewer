@@ -336,5 +336,11 @@ public void generateMesh(){
 	
 }
 
+public void setCircleAllPontsEnlarge(
+		Vector<CircleOnScreen> circleAllPointsEnlarge) {
+	allCircles.setCircleAllPointsEnlarge(circleAllPointsEnlarge);
+	
+}
+
 
 }

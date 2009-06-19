@@ -57,4 +57,9 @@ public SaveMeshSur(String path) {
 		pw.println(" -0.683257 0.296420 0.000000 5.982628 -0.436983 0.436896");
 		pw.close();
 	}
+
+	public String getPath() {
+		
+		return path;
+	}
 }

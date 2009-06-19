@@ -61,4 +61,9 @@ public class CircleOnScreen {
 	 public int getCantPoints(){
 		 return circlePoints.size();
 	 }
+
+	public Color getColor() {
+		return color;
+	}
+	 
 }

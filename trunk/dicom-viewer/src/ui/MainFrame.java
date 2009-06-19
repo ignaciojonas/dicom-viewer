@@ -54,6 +54,7 @@ import data.io.DicomProperties;
 import data.io.Encoder;
 import data.io.LoadFile;
 import data.io.OpenSUR;
+import data.io.Project;
 import data.io.SaveFile;
 import data.io.SaveFilteredImages;
 import data.io.SaveMeshSur;
@@ -1525,7 +1526,6 @@ public class MainFrame extends javax.swing.JFrame {
 			file=filechooser.getSelectedFile();
 			OpenSUR os=new OpenSUR(file.getAbsolutePath());
 			load3DMenuItem.setEnabled(true);
-			load3DMenuItemActionPerformed(null);
 		}
 		
 	}
@@ -1536,10 +1536,58 @@ public class MainFrame extends javax.swing.JFrame {
 	}
 	
 	public void openProjectMenuItemActionPerformed(ActionEvent evt){
+		filechooser = new JFileChooser(new File("c:\\"));
+		filechooser.setMultiSelectionEnabled(false);
+		FFilter crlFilter; 
+		File file;
+		crlFilter = new FFilter("rj", "Project Files");
+		filechooser.addChoosableFileFilter(crlFilter);
+		filechooser.setAcceptAllFileFilterUsed(false);
+		filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		if (filechooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			file=filechooser.getSelectedFile();
+			Project p=new Project(file.getAbsolutePath());
+			p.restoreProject(handImage);
+			load3DMenuItem.setEnabled(true);
+			jButtonBack.setEnabled(true);
+			jButtonNext.setEnabled(true);
+			jButtonNext.setEnabled(true);
+			jButtonFirst.setEnabled(true);
+			jButtonLast.setEnabled(true);
+			jButtonNewWin.setEnabled(true);
+			jButtonPlay.setEnabled(true);
+			jSlider1.setEnabled(true);
+			loadDicomPropMenuItem.setEnabled(true);
+
+		}
+
 		
 	}
 	public void saveProjectActionPerformed(ActionEvent evt){
 		
+		filechooser = new JFileChooser(new File("c:\\"));
+		filechooser.setMultiSelectionEnabled(false);
+		FFilter crlFilter; 
+		File file;
+		crlFilter = new FFilter("rj", "Project Files");
+		filechooser.addChoosableFileFilter(crlFilter);
+		filechooser.setAcceptAllFileFilterUsed(false);
+		filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		if (filechooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+			file=filechooser.getSelectedFile();
+			if(file.exists()){
+				int response=JOptionPane.showConfirmDialog(null,"Overwrite existing file?","Confirm Overwrite",JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
+				if(response==JOptionPane.CANCEL_OPTION){
+					return;
+				}
+			}
+			SaveMeshSur sv=new SaveMeshSur(file.getAbsolutePath());
+			sv.save2();
+			Project p=new Project(handImage.getAllCircles().getCircleAllPointsEnlarge(),ImagesData.imagesPaths,sv.getPath());
+			p.saveProject(file.getAbsolutePath());
+			
+			
+		}	
 	}
 
 }

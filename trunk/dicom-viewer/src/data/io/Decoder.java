@@ -10,10 +10,10 @@ import org.exolab.castor.xml.Unmarshaller;
 public class Decoder {
 
 
-	public static Vector decode(String fileName){
-		Vector ret=null;
+	public static Project decode(String fileName){
+		Project ret=null;
 		try {
-		      ret = (Vector)Unmarshaller.unmarshal(Vector.class, new FileReader(fileName));
+		      ret = (Project)Unmarshaller.unmarshal(Project.class, new FileReader(fileName));
 		} catch (Exception e) {}
 		    return ret;
 	}

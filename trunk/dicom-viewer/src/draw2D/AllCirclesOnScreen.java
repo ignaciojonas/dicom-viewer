@@ -17,8 +17,16 @@ public class AllCirclesOnScreen {
 	 public AllCirclesOnScreen() {
 		// TODO Auto-generated constructor stub
 	}
+	 public void setCircleAllPointsEnlarge(
+				Vector<CircleOnScreen> circleAllPointsEnlarge) {
+			this.circleAllPointsEnlarge = circleAllPointsEnlarge;
+		}
+	 public Vector<CircleOnScreen> getCircleAllPointsEnlarge() {
+			return circleAllPointsEnlarge;
+		}
 	 public void draw(Graphics g, int index){
 		if ((VisualData.viewCircleAll)&&(size()>0)){
+			circleAllPointsEnlarge.get(index).draw(g);
 			try{
 				circleAllNormales.get(index).draw(g);
 				circleAllPointsEnlarge.get(index).draw(g);
