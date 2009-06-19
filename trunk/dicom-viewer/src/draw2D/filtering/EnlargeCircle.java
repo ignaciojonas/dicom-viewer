@@ -40,7 +40,7 @@ public class EnlargeCircle {
 		return normales;
 	}
 	
-	public EnlargeCircle(HandImage handImage, int radio,BufferedImage image,InitCircleOnScreen points) {
+	public EnlargeCircle(HandImage handImage, int radio,BufferedImage image,CircleOnScreen points) {
 		this.radio=radio;
 		this.image=image;
 		this.handImage=handImage;
@@ -54,7 +54,7 @@ public class EnlargeCircle {
 	
 	//nuevo
 	private void enlargePoint(Point p1,Point p2,Point p3){
-//		if((p2.x==374)&&(p2.y==242)){
+//		if((p2.x==162)&&(p2.y==141)){
 //			System.out.println("Caso Particular");
 //		}
 		Point set = new Point (p2.x,p2.y);
@@ -112,13 +112,30 @@ public class EnlargeCircle {
 	}
 
 	private Point selectPoint(Point ant, Vector<Point> blackPoints,Point p2,Normal normal) {
-//		if((p2.x==325)&&(p2.y==99)){
-//			System.out.println("Caso Particular");
-//		}
-		if(ant==null)
-			return blackPoints.get(0);
+		if((p2.x==162)&&(p2.y==140)){
+			System.out.println("Caso Particular");
+		}
+		if((p2.x==167)&&(p2.y==135)){
+			System.out.println("Caso Particular");
+		}
+		if((p2.x==157)&&(p2.y==151)){
+			System.out.println("Caso Particular");
+		}
 		
-		Point ret = normal.getNormalAdd(p2,1); //Inicializo con algo por las dudas.
+		Point ret;
+		boolean antIgualNull = false;
+		if(ant==null){
+			antIgualNull=true;
+			if (blackPoints.size()>0){
+				ret =null;
+				ant = new Point(p2.x,p2.y);
+			}
+			else
+				ret = normal.getNormalAdd(p2,1); //Inicializo con algo por las dudas.
+		}else{
+			 	ret = normal.getNormalAdd(p2,1); //Inicializo con algo por las dudas.
+		}
+		
 		
 		double dist;
 		double distMin=Double.MAX_VALUE;
@@ -132,6 +149,24 @@ public class EnlargeCircle {
 				ret = point;
 			}
 		}
+		if(antIgualNull){
+			if((getDistance(ant, ret) > ImagesData.MAX_DISTANCE)||(ret == null)){//recorro la distancia maxima permitida
+				int i=1;
+				
+				ret=(Point) p2.clone();
+				double sizeL=ImagesData.MAX_DISTANCE;
+				double sizeN=0;
+				while(sizeN<=sizeL){
+					ret = normal.getNormalAdd(p2, i);
+					sizeN=getDistance(p2, ret);
+					i++;
+				}	
+			}
+			return ret;	
+			
+		}
+		
+		
 		Line lin=normales.get(normales.size()-1);
 		double dis=lin.getSize()-Math.abs(getDistance(p2, ret));
 		
@@ -232,7 +267,6 @@ public class EnlargeCircle {
 		double yy=y/modulo;
 		return new Normal(xx,yy);
 		
-		
 	}
 	
 	public CircleOnScreen getReduceCircle(){
@@ -261,7 +295,7 @@ public class EnlargeCircle {
 	private void reducePoint(Point p1,Point p2, Point p3){
 	
 		Normal normal= getVectorNormal(p1,p2,p3);
-		reduceCircle.add(normal.getNormalSubtract(p2,10));
+		reduceCircle.add(normal.getNormalSubtract(p2,ImagesData.REDUCE));
 	}
 }
 

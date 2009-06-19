@@ -23,6 +23,7 @@ import draw2D.CircleOnScreen;
 import draw2D.InitCircleOnScreen;
 import draw2D.NormalOnScreen;
 import draw2D.filtering.EnlargeCircle;
+import draw3D.GenerateMesh;
 import draw3D.Line;
 import draw3D.Mesh;
 import draw3D.scenario.screen.Point3D;
@@ -55,6 +56,8 @@ public class HandImage extends JPanel{
 public AllCirclesOnScreen getAllCircles() {
 	return allCircles;
 }
+
+
  
  public HandImage(Vector<BufferedImage> imagesB) {
 	 this.imagesB=imagesB;
@@ -210,6 +213,35 @@ public void deleteSeeds() {
 	this.setImage();
 	
 }
+public void enlargeCircleForAllWithReduce(){
+	CircleOnScreen init;
+	for(int i=0;i<imagesB.size();i++){
+		if(i==0)
+			init = this.initCircle;
+		else
+			init = allCircles.getRecudeCircle(i-1);
+		EnlargeCircle e = new EnlargeCircle(this,1,imagesB.get(i),init);
+		
+		CircleOnScreen enl = e.enlargeCircle();
+		enl.setColor(VisualData.enlargeColor);
+				
+		CircleOnScreen redu = e.getReduceCircle();
+		redu.setColor(VisualData.reduceColor);
+		
+		NormalOnScreen norm = getNormalOnScreen(this.initCircle, enl);
+		norm.setColor(VisualData.normal);
+		
+		
+		this.initCircle.setColor(VisualData.initColor);
+		
+		
+		allCircles.add(enl,redu,this.initCircle,norm);
+		
+	}
+	this.setImage();
+}
+
+
 public void enlargeCircleForAll(){
 	for(int i=0;i<imagesB.size();i++){
 		EnlargeCircle e = new EnlargeCircle(this,1,imagesB.get(i),this.initCircle);
@@ -298,45 +330,10 @@ private NormalOnScreen getNormalOnScreen(InitCircleOnScreen init, CircleOnScreen
 }
 
 public void generateMesh(){
+	GenerateMesh gm = new GenerateMesh(allCircles);
+	gm.start();
 	
-	Mesh mesh = new Mesh();
 	
-	float div= 90.0f;
-	float dist = 0.0f;
-	int cantp=1;
-	
-	int size = allCircles.size();
-	CircleOnScreen aux = allCircles.getEnlargeCircle(0);
-	int circleSize = aux.getCantPoints();
-	
-	VisualData.jProgressBar.setMaximum(size);
-	 VisualData.jProgressBar.setValue(0);
-	 VisualData.jProgressBar.setStringPainted(true);
-	 
-	//Mesh.points.add(new Point3D(-1,-1,-1));//Se agrega para que la numeracion comience de 1
-	for (int i = 0;i<size;i++){
-		aux = allCircles.getEnlargeCircle(i);
-		Vector<Point> v1 = aux.getCirclePoints();
-		
-		for (int j = 0;j<v1.size();j++){
-			
-			Point p = v1.get(j);
-			Point3D p3d = new Point3D(p.x/div, p.y/div, dist);
-			Mesh.points.add(p3d);
-			Mesh.pointsSUR+= " "+cantp+" "+p3d.toSUR()+"\n";
-			cantp++;
-		}
-		dist+=0.3f;
-		VisualData.jProgressBar.setValue(i);  
-    	VisualData.jProgressBar.repaint();
-	}
-	Mesh.cantPoints3D = cantp-1;
-	Mesh.generateTriangles(circleSize,size);
-	System.gc();
-	VisualData.jProgressBar.setValue(size);
-	VisualData.jProgressBar.repaint();
-	
-	JOptionPane.showMessageDialog(null,"Mesh generate succefuly","Confirm",JOptionPane.INFORMATION_MESSAGE);
 }
 
 

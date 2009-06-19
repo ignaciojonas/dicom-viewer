@@ -49,6 +49,8 @@ public class EnlargeDialog extends javax.swing.JDialog {
 	private JLabel jLabel1;
 	private JButton jButton1;
 	private JLabel jLabel5;
+	private JSpinner jSpinner3;
+	private JLabel jLabel7;
 	private JPanel normalColorPanel;
 	private JPanel enlargeColorPanel;
 	private JPanel reduceColorPanel;
@@ -94,7 +96,7 @@ public class EnlargeDialog extends javax.swing.JDialog {
 				jButton1 = new JButton();
 				getContentPane().add(jButton1);
 				jButton1.setText("Apply");
-				jButton1.setBounds(64, 89, 59, 22);
+				jButton1.setBounds(64, 114, 59, 22);
 				jButton1.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
 						jButton1ActionPerformed(evt);
@@ -199,6 +201,19 @@ public class EnlargeDialog extends javax.swing.JDialog {
 				jPanel2.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
 				jPanel2.setBounds(184, 16, 137, 120);
 			}
+			{
+				jLabel7 = new JLabel();
+				getContentPane().add(jLabel7);
+				jLabel7.setText("Reduce Circle: ");
+				jLabel7.setBounds(12, 72, 111, 40);
+			}
+			{
+				jSpinner3 = new JSpinner();
+				getContentPane().add(jSpinner3);
+				
+				jSpinner3.setValue(ImagesData.REDUCE);
+				jSpinner3.setBounds(120, 82, 39, 19);
+			}
 			this.setResizable(false);
 			this.setLocationRelativeTo(null);
 			this.setSize(341, 178);
@@ -211,6 +226,7 @@ public class EnlargeDialog extends javax.swing.JDialog {
 
 		ImagesData.MAX_DISTANCE=((Integer) jSpinner1.getValue());
 		ImagesData.MAX_DISTANCE_NEIG=((Integer) jSpinner2.getValue());
+		ImagesData.REDUCE = ((Integer) jSpinner3.getValue());
 		VisualData.enlargeColor = enlargeColorPanel.getBackground();
 		VisualData.reduceColor = reduceColorPanel.getBackground();
 		VisualData.normal = normalColorPanel.getBackground();

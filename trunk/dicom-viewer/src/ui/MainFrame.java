@@ -109,6 +109,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private JSeparator jSeparator6;
 	private JMenuItem jMenuItemEnlargeCircle;
 	private JMenuItem jMenuItemEnlargeCircleforAll;
+	private JMenuItem jMenuItemEnlargeCircleforAllReduce;
 	private JMenuItem jMenuItemGenerateMesh;
 	private JLabel jLabelNameImage;
 	private JMenuItem jMenuItemDCircle;
@@ -920,7 +921,7 @@ public class MainFrame extends javax.swing.JFrame {
 					{
 						jMenuItemEnlargeCircleforAll = new JMenuItem();
 						jMenu3D.add(jMenuItemEnlargeCircleforAll);
-						jMenuItemEnlargeCircleforAll.setText("Enlarge Circle for All");
+						jMenuItemEnlargeCircleforAll.setText("Enlarge All Circles (Init)");
 						jMenuItemEnlargeCircleforAll.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/enlarge.gif")));
 						
 						jMenuItemEnlargeCircleforAll.addActionListener(new ActionListener() {
@@ -932,7 +933,21 @@ public class MainFrame extends javax.swing.JFrame {
 						
 						});
 					}
-					
+					{
+						jMenuItemEnlargeCircleforAllReduce = new JMenuItem();
+						jMenu3D.add(jMenuItemEnlargeCircleforAllReduce);
+						jMenuItemEnlargeCircleforAllReduce.setText("Enlarge All Circles (Reduce)");
+						jMenuItemEnlargeCircleforAllReduce.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/enlarge.gif")));
+						
+						jMenuItemEnlargeCircleforAllReduce.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								jMenuItemEnlargeCircleforAllReduceActionPerformed(evt);
+								jMenuItemGenerateMesh.setEnabled(true);
+							}
+
+						
+						});
+					}
 					{
 						jMenuItemGenerateMesh = new JMenuItem();
 						jMenu3D.add(jMenuItemGenerateMesh);
@@ -1481,12 +1496,18 @@ public class MainFrame extends javax.swing.JFrame {
 		}
 		
 	}
+	private void jMenuItemEnlargeCircleforAllReduceActionPerformed(ActionEvent evt) {
+		
+		handImage.enlargeCircleForAllWithReduce();
+		
+	}
+	
 	private void jMenuItemEnlargeCircleforAllActionPerformed(ActionEvent evt) {
 		
 		handImage.enlargeCircleForAll();
 		
 	}
-	
+
 	private void jMenuConfigEnlargeActionPerformed(ActionEvent evt) {
 		EnlargeDialog ed=new EnlargeDialog(this);
 		ed.setVisible(true);

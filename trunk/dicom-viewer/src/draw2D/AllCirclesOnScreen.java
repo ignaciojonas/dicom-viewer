@@ -28,7 +28,9 @@ public class AllCirclesOnScreen {
 			}catch(Exception e){}
 		}
 	 }
-	
+	 public CircleOnScreen getRecudeCircle(int i){
+		 return circleAllPointsReduce.get(i);
+	 }
 	 public void add(CircleOnScreen enlarge,CircleOnScreen reduce,InitCircleOnScreen init){
 		 circleAllPointsEnlarge.add(enlarge);
 		 circleAllPointsReduce.add(reduce);

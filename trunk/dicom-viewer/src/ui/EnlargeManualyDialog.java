@@ -308,7 +308,7 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 
 		ImagesData.MAX_DISTANCE=((Integer) jSpinner1.getValue());
 		ImagesData.MAX_DISTANCE_NEIG=((Integer) jSpinner2.getValue());
-
+		jButtonPreviewMouseClicked(null);
 		
 	
 	}
