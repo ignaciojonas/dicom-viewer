@@ -1,7 +1,11 @@
 package draw3D.scenario.screen;
 
+import org.jouvieje.jogl.tools.SimpleShape;
+
 import draw3D.Setup3D;
 import net.java.games.jogl.GL;
+import net.java.games.jogl.GLDrawable;
+import net.java.games.jogl.GLU;
 
 public class Triangle3D {
 
@@ -33,9 +37,11 @@ public class Triangle3D {
 		gl.glVertex3f( v1.getX(),v1.getY(),v1.getZ());
 		gl.glVertex3f( v2.getX(),v2.getY(),v2.getZ());
 		//if (Setup3D.lightPosition0[3]==0)
+		if(GL.GL_LINE_STRIP != Setup3D.mesh)
 			gl.glNormal3f( normal.getX(),normal.getY(),normal.getZ());
 		
 	}
+
 	public String getSUR(int num1, int num2, int num3){
 		String ret="";
 		ret+=" "+num1+" "+v0.getX()+" "+v0.getY()+" "+v0.getZ()+"\n";
@@ -91,4 +97,6 @@ public class Triangle3D {
 		nz = v1x*v2y - v1y*v2x;
 		return new Point3D(nx*50,ny*50,nz*50); 
 	}
+
+	
 }

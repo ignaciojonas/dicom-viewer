@@ -45,7 +45,7 @@ public class SaveFilteredImages extends Thread{
 				if (tab==0)
 					name = "IMG_"+aux+".bmp";
 				else
-					name = images.get(i)+".bmp";
+					name = ImagesData.imagesBFilteredName.get(i)+".bmp";
 					name = name.replace(":", "_");
 				JAI.create("filestore",bi, folder.getAbsolutePath()+"/"+name, "BMP");
 				

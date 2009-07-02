@@ -5,6 +5,8 @@ import java.awt.Point;
 import java.util.Iterator;
 import java.util.Vector;
 
+import data.ImagesData;
+
 public class InitCircleOnScreen extends CircleOnScreen{
 
 	private int x_min=Integer.MAX_VALUE;
@@ -22,7 +24,7 @@ public class InitCircleOnScreen extends CircleOnScreen{
 
 	public void addPointToInitCircle(Point p) {
 		if(circlePoints.size()>0){
-			addCirclesPointsBetween(circlePoints.get(circlePoints.size()-1),p,10);
+			addCirclesPointsBetween(circlePoints.get(circlePoints.size()-1),p,ImagesData.POINTSBETWEEN);
 		}
 		circlePoints.add(p);
 	}

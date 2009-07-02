@@ -248,13 +248,13 @@ public class OpenGLCanvas extends Scene
 		gl.glEnable(GL.GL_LIGHTING);
 		gl.glTranslatef(Setup3D.objectPosition[0], Setup3D.objectPosition[1], Setup3D.objectPosition[2]);
 		
-		SimpleShape.drawGLUSphere(glDrawable, 2.0f, 40, false, GLU.GLU_FILL);//Test Circle
-		
-		gl.glBegin(GL.GL_TRIANGLES);
+		//SimpleShape.drawGLUSphere(glDrawable, 2.0f, 40, false, GLU.GLU_FILL);//Test Circle
 
-        	drawMesh();
-        	
-		gl.glEnd();
+		
+		gl.glBegin(Setup3D.mesh);
+    	drawMesh();
+    	gl.glEnd();
+
 		gl.glTranslatef(-Setup3D.objectPosition[0], -Setup3D.objectPosition[1], -Setup3D.objectPosition[2]);
 		
 		gl.glDisable(GL.GL_LIGHT3);
@@ -331,7 +331,7 @@ public class OpenGLCanvas extends Scene
 	
 	
 	
-	
+
 	private void drawMesh(){
 		Vector<Triangle3D> triangles = Mesh.getTriangles();
 		int s = triangles.size();
@@ -362,7 +362,11 @@ public class OpenGLCanvas extends Scene
 			printer.drawTextAt(glDrawable, "UpPage : Light go uo", 10, size.height-200, 0);
 			printer.drawTextAt(glDrawable, "DowndPage : Light go down", 10, size.height-220, 0);
 			printer.drawTextAt(glDrawable, "End : Light Positional", 10, size.height-240, 0);
-			printer.drawTextAt(glDrawable, "1 : Enable Light Aux1", 10, size.height-260, 0);
+			printer.drawTextAt(glDrawable, "1 : Enable Light 1", 10, size.height-260, 0);
+			printer.drawTextAt(glDrawable, "2 : Enable Light 2", 10, size.height-280, 0);
+			printer.drawTextAt(glDrawable, "3 : Enable Light 3", 10, size.height-300, 0);
+			printer.drawTextAt(glDrawable, "4 : Enable Light 4", 10, size.height-320, 0);
+			printer.drawTextAt(glDrawable, "M : Meash Line/Full", 10, size.height-340, 0);
 			
 		}else{
 			printer.drawTextAt(glDrawable, "F2 : Show/Hide Controls", 10, size.height-20, 0);
@@ -398,14 +402,20 @@ public class OpenGLCanvas extends Scene
 			case KeyEvent.VK_2:Setup3D.enableLight1() ;break;
 			case KeyEvent.VK_3:Setup3D.enableLight2() ;break;
 			case KeyEvent.VK_4:Setup3D.enableLight3() ;break;
+			case KeyEvent.VK_M:setMesh();break;
 			
 		}
 	}
 
+	private void setMesh(){
+		if (Setup3D.mesh==GL.GL_LINE_STRIP)
+			Setup3D.mesh=GL.GL_TRIANGLES;
+		else
+			Setup3D.mesh=GL.GL_LINE_STRIP;
+		
+	}
+	
 	private int smooth = GL.GL_SMOOTH;
-	
-	
-	
 	private void setSmooth(){
 		if (smooth== GL.GL_SMOOTH){
 			gl.glShadeModel(GL.GL_FLAT);

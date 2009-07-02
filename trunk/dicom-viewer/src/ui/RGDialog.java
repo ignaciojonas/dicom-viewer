@@ -97,7 +97,8 @@ public class RGDialog extends javax.swing.JDialog {
 				jButton1 = new JButton();
 				getContentPane().add(jButton1);
 				jButton1.setText("Apply");
-				jButton1.setBounds(164, 104, 59, 23);
+				jButton1.setBounds(164, 104, 85, 23);
+				jButton1.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/filtroRG.gif")));
 				jButton1.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
 						jButton1ActionPerformed(evt);
@@ -211,8 +212,9 @@ public class RGDialog extends javax.swing.JDialog {
 				jPanel2.setBounds(204, 10, 295, 88);
 			}
 			this.setResizable(false);
-			this.setLocationRelativeTo(null);
+			
 			this.setSize(515, 160);
+			this.setLocationRelativeTo(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -54,7 +54,7 @@ public class EnlargeCircle {
 	
 	//nuevo
 	private void enlargePoint(Point p1,Point p2,Point p3){
-//		if((p2.x==162)&&(p2.y==141)){
+//		if((p2.x==298)&&(p2.y==296)){
 //			System.out.println("Caso Particular");
 //		}
 		Point set = new Point (p2.x,p2.y);
@@ -112,17 +112,20 @@ public class EnlargeCircle {
 	}
 
 	private Point selectPoint(Point ant, Vector<Point> blackPoints,Point p2,Normal normal) {
-		if((p2.x==162)&&(p2.y==140)){
-			System.out.println("Caso Particular");
-		}
-		if((p2.x==167)&&(p2.y==135)){
-			System.out.println("Caso Particular");
-		}
-		if((p2.x==157)&&(p2.y==151)){
-			System.out.println("Caso Particular");
-		}
+//		if((p2.x==162)&&(p2.y==140)){
+//			System.out.println("Caso Particular");
+//		}
+//		if((p2.x==167)&&(p2.y==135)){
+//			System.out.println("Caso Particular");
+//		}
+//		if((p2.x==157)&&(p2.y==151)){
+//			System.out.println("Caso Particular");
+//		}
 		
-		Point ret;
+//		if(ant==null)
+//			return blackPoints.get(0);
+			
+		Point ret;// = normal.getNormalAdd(p2,1);
 		boolean antIgualNull = false;
 		if(ant==null){
 			antIgualNull=true;
@@ -291,6 +294,8 @@ public class EnlargeCircle {
 			}
 		return new CircleOnScreen(reduceCircle,Color.CYAN);
 	}
+	
+	
 	
 	private void reducePoint(Point p1,Point p2, Point p3){
 	

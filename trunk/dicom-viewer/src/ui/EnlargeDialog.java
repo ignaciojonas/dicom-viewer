@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import javax.swing.JFrame;
@@ -49,6 +50,8 @@ public class EnlargeDialog extends javax.swing.JDialog {
 	private JLabel jLabel1;
 	private JButton jButton1;
 	private JLabel jLabel5;
+	private JLabel jLabel8;
+	private JSpinner jSpinner4;
 	private JSpinner jSpinner3;
 	private JLabel jLabel7;
 	private JPanel normalColorPanel;
@@ -96,7 +99,8 @@ public class EnlargeDialog extends javax.swing.JDialog {
 				jButton1 = new JButton();
 				getContentPane().add(jButton1);
 				jButton1.setText("Apply");
-				jButton1.setBounds(64, 114, 59, 22);
+				jButton1.setBounds(135, 147, 83, 22);
+				jButton1.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/configenlarge.gif")));
 				jButton1.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
 						jButton1ActionPerformed(evt);
@@ -107,7 +111,7 @@ public class EnlargeDialog extends javax.swing.JDialog {
 				jSpinner1 = new JSpinner();
 				getContentPane().add(jSpinner1);
 				jSpinner1.setValue(ImagesData.MAX_DISTANCE);
-				jSpinner1.setBounds(120, 21, 39, 19);
+				jSpinner1.setBounds(120, 21, 39, 21);
 							}
 			{
 				jLabel2 = new JLabel();
@@ -121,7 +125,7 @@ public class EnlargeDialog extends javax.swing.JDialog {
 				jSpinner2 = new JSpinner();
 				getContentPane().add(jSpinner2);
 				jSpinner2.setValue(ImagesData.MAX_DISTANCE_NEIG);
-				jSpinner2.setBounds(120, 53, 39, 19);
+				jSpinner2.setBounds(120, 53, 39, 22);
 			}
 			{
 				jLabel6 = new JLabel();
@@ -212,11 +216,24 @@ public class EnlargeDialog extends javax.swing.JDialog {
 				getContentPane().add(jSpinner3);
 				
 				jSpinner3.setValue(ImagesData.REDUCE);
-				jSpinner3.setBounds(120, 82, 39, 19);
+				jSpinner3.setBounds(120, 82, 39, 22);
+			}
+			{
+				
+				jSpinner4 = new JSpinner();
+				getContentPane().add(jSpinner4);
+				jSpinner4.setValue(ImagesData.POINTSBETWEEN);
+				jSpinner4.setBounds(120, 115, 39, 21);
+			}
+			{
+				jLabel8 = new JLabel();
+				getContentPane().add(jLabel8);
+				jLabel8.setText("Init Point Between:");
+				jLabel8.setBounds(12, 105, 111, 40);
 			}
 			this.setResizable(false);
 			this.setLocationRelativeTo(null);
-			this.setSize(341, 178);
+			this.setSize(347, 226);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -227,6 +244,7 @@ public class EnlargeDialog extends javax.swing.JDialog {
 		ImagesData.MAX_DISTANCE=((Integer) jSpinner1.getValue());
 		ImagesData.MAX_DISTANCE_NEIG=((Integer) jSpinner2.getValue());
 		ImagesData.REDUCE = ((Integer) jSpinner3.getValue());
+		ImagesData.POINTSBETWEEN = ((Integer) jSpinner4.getValue());
 		VisualData.enlargeColor = enlargeColorPanel.getBackground();
 		VisualData.reduceColor = reduceColorPanel.getBackground();
 		VisualData.normal = normalColorPanel.getBackground();

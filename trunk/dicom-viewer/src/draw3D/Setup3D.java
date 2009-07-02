@@ -14,8 +14,8 @@ public class Setup3D {
 
 	public static final String light="sounds/light.wav";
 	public static final String light2="sounds/light2.wav";
-	public static String cross = "textures/cross3.png";
-	
+	public static String cross = "textures/D01.png";
+	public static int mesh = GL.GL_TRIANGLES;
 	
 	public static String FPSInfo="FPS";
 	

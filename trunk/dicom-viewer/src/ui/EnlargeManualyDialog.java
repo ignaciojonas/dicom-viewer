@@ -184,7 +184,8 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 				jButton1 = new JButton();
 				getContentPane().add(jButton1);
 				jButton1.setText("Apply");
-				jButton1.setBounds(64, 78, 68, 21);
+				jButton1.setBounds(51, 78, 81, 21);
+				jButton1.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/configenlarge.gif")));
 				jButton1.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
 						jButton1ActionPerformed(evt);

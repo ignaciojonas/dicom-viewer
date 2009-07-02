@@ -19,6 +19,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Vector;
 
@@ -34,6 +35,7 @@ import javax.swing.plaf.SliderUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+
 
 import com.l2fprod.common.swing.JDirectoryChooser;
 import com.pixelmed.dicom.AttributeList;
@@ -51,7 +53,6 @@ import ui.image.ThreadPlay;
 import data.ImagesData;
 import data.VisualData;
 import data.io.DicomProperties;
-import data.io.Encoder;
 import data.io.LoadFile;
 import data.io.OpenSUR;
 import data.io.Project;
@@ -62,6 +63,8 @@ import draw2D.InitCircleOnScreen;
 import draw2D.filtering.EnlargeCircle;
 import draw2D.filtering.MeanFilter;
 import draw2D.filtering.RegionGrowing;
+import draw2D.filtering.edge.CannyEdgeDetector;
+import draw2D.filtering.edge.EdgeDetectionAlls;
 import draw2D.filtering.rg.Criterio;
 import draw2D.filtering.rg.CriterioRGEntorno;
 import draw2D.filtering.rg.CriterioRGGradiente;
@@ -130,6 +133,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private JMenuItem load3DMenuItem;
 	private JMenuItem filterMeanMenuItem;
 	private JMenuItem filterMedianMenuItem;
+	private JMenuItem cannyMenuItem;
 	private JMenuItem filterRGMenuItem;
 	private JMenuItem jMenuItemSaveProject;
 	private JMenu jMenu4;
@@ -842,6 +846,34 @@ public class MainFrame extends javax.swing.JFrame {
 						jMenuBar1.add(jMenuFilter);
 						jMenuFilter.setText("Filter");
 						{
+							cannyMenuItem = new JMenuItem();
+							
+							jMenuFilter.add(cannyMenuItem);
+							cannyMenuItem.setText("Edge Detection");
+							
+							cannyMenuItem.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/filtroED.gif")));
+							cannyMenuItem.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent evt) {
+									cannyMenuItemActionPerformed(evt);
+								}
+							});
+						
+						}
+						{
+							filterRGMenuItem = new JMenuItem();
+							
+							jMenuFilter.add(filterRGMenuItem);
+							filterRGMenuItem.setText("Region Growing");
+							
+							filterRGMenuItem.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/filtroRG.gif")));
+							filterRGMenuItem.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent evt) {
+									filterRGMenuItemActionPerformed(evt);
+								}
+							});
+						
+						}
+						{
 							filterMeanMenuItem = new JMenuItem();
 							
 							jMenuFilter.add(filterMeanMenuItem);
@@ -869,20 +901,7 @@ public class MainFrame extends javax.swing.JFrame {
 							});
 						
 						}
-						{
-							filterRGMenuItem = new JMenuItem();
-							
-							jMenuFilter.add(filterRGMenuItem);
-							filterRGMenuItem.setText("Region Growing");
-							
-							filterRGMenuItem.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/filtro.gif")));
-							filterRGMenuItem.addActionListener(new ActionListener() {
-								public void actionPerformed(ActionEvent evt) {
-									filterRGMenuItemActionPerformed(evt);
-								}
-							});
 						
-						}
 						{
 							//jSeparator1 = new JSeparator();
 							jMenuFilter.add(jSeparator1);
@@ -1494,8 +1513,9 @@ public class MainFrame extends javax.swing.JFrame {
 			LoadFile ld=new LoadFile(file.getAbsolutePath());
 			handImage.setCirclePoints(ld.load());
 			handImage.setImage();
+			
 		}
-		
+	
 	}
 	private void jMenuItemEnlargeCircleforAllReduceActionPerformed(ActionEvent evt) {
 		
@@ -1588,6 +1608,12 @@ public class MainFrame extends javax.swing.JFrame {
 			
 			
 		}	
+	}
+	
+		public void cannyMenuItemActionPerformed(ActionEvent evt) {
+			EdgeDetection mD= new EdgeDetection(this,jTabbedPane1,handImageFiltered);
+			mD.setVisible(true);
+		
 	}
 
 }

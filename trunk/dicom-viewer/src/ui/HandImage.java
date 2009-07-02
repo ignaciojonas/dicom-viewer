@@ -47,7 +47,8 @@ public class HandImage extends JPanel{
   private BufferedImage image = null;
 
   public void setCirclePoints(Vector<Point> circlePoints) {
-		this.initCircle = new InitCircleOnScreen(circlePoints,Color.RED);
+		this.initCircle = new InitCircleOnScreen(circlePoints,VisualData.initColor);
+	
 	}
     
     public InitCircleOnScreen getInitCircle() {
@@ -174,8 +175,9 @@ public void setImage() {
 		g.drawImage(image, 0, 0, null);
 		}
 	drawSeeds(this.getGraphics());
-	allCircles.draw(this.getGraphics(), index);
 	drawInitCircle();
+	allCircles.draw(this.getGraphics(), index);
+
 }
 
 public void nextImage(){
@@ -216,6 +218,7 @@ public void deleteSeeds() {
 public void enlargeCircleForAllWithReduce(){
 	CircleOnScreen init;
 	for(int i=0;i<imagesB.size();i++){
+		System.out.println(i);
 		if(i==0)
 			init = this.initCircle;
 		else
@@ -319,10 +322,14 @@ public void previewCircle(int index,Color initColor,Color enlargeColor,Color red
 	this.initCircle.draw(this.getGraphics());
 }
 
-private NormalOnScreen getNormalOnScreen(InitCircleOnScreen init, CircleOnScreen enlarge) {
+private NormalOnScreen getNormalOnScreen(CircleOnScreen init, CircleOnScreen enlarge) {
 	 Vector<Line> normals = new Vector<Line>();
 	 Vector<Point> in = init.getCirclePoints();
 	 Vector<Point> en = enlarge.getCirclePoints();
+	 Point poin = in.get(0);
+	 in.remove(0);
+	 in.add(in.size()-1,poin);
+	 
 	 for(int i=0;i<enlarge.getCantPoints();i++){
 		 normals.add(new Line(in.get(i),en.get(i))); 
 	 }
@@ -332,8 +339,7 @@ private NormalOnScreen getNormalOnScreen(InitCircleOnScreen init, CircleOnScreen
 public void generateMesh(){
 	GenerateMesh gm = new GenerateMesh(allCircles);
 	gm.start();
-	
-	
+
 }
 
 public void setCircleAllPontsEnlarge(

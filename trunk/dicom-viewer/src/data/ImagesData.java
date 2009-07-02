@@ -46,6 +46,7 @@ public class ImagesData {
 	public static int MAX_DISTANCE=50;
 	public static int MAX_DISTANCE_NEIG=20;
 	public static int REDUCE=40;
+	public static int POINTSBETWEEN=10;
 	
 	
 	public static void addImagePath(File file){

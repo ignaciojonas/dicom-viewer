@@ -2,6 +2,7 @@ package ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import javax.swing.JFrame;
@@ -67,7 +68,8 @@ public class MeanDialog extends javax.swing.JDialog {
 				jButton1 = new JButton();
 				getContentPane().add(jButton1);
 				jButton1.setText("Apply");
-				jButton1.setBounds(30, 60, 59, 22);
+				jButton1.setBounds(12, 60, 83, 22);
+				jButton1.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/filtro.gif")));
 				jButton1.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
 						jButton1ActionPerformed(evt);
