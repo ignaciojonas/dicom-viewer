@@ -2,6 +2,8 @@ package data.io;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.awt.image.SampleModel;
+import java.awt.image.renderable.ParameterBlock;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
@@ -11,6 +13,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.media.jai.JAI;
+import javax.media.jai.PlanarImage;
 
 import org.dcm4che.imageio.plugins.DcmImageReadParam;
 
@@ -47,7 +50,19 @@ public class SaveFilteredImages extends Thread{
 				else
 					name = ImagesData.imagesBFilteredName.get(i)+".bmp";
 					name = name.replace(":", "_");
-				JAI.create("filestore",bi, folder.getAbsolutePath()+"/"+name, "BMP");
+				PlanarImage pi = PlanarImage.wrapRenderedImage(bi);
+				SampleModel sm = pi.getSampleModel();
+				if(sm.getNumBands()>3){
+					PlanarImage out = JAI.create("bandselect",pi,new int[] {0,1,2});
+					sm = pi.getSampleModel();
+					System.out.println("Bands: "+sm.getNumBands());
+					JAI.create("filestore",out, folder.getAbsolutePath()+"/"+name, "BMP");
+				}
+				else{
+					JAI.create("filestore",bi, folder.getAbsolutePath()+"/"+name, "BMP");
+				}
+			
+			
 				
 				VisualData.jProgressBar.setValue(progress);  
 		    	VisualData.jProgressBar.repaint();
