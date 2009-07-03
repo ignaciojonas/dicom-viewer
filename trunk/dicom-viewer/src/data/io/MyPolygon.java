@@ -70,8 +70,4 @@ public class MyPolygon{
 		this.p3 = p3;
 	}
 
-
-	
-	
-	
 }

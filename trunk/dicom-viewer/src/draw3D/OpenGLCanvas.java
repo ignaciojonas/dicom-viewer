@@ -21,6 +21,7 @@ import org.jouvieje.util.math.Vector3f;
 import org.jouvieje.util.math.Vector4f;
 
 import sound.PlayWav;
+import ui.HandImage;
 
 import data.VisualData;
 import draw3D.camera.ViewerCamera;
@@ -33,16 +34,10 @@ import net.java.games.jogl.*;
 
 public class OpenGLCanvas extends Scene
 {
-	
-
-
 	public int targetKill =-1;
-
-
 	//Camera
 	private Viewer viewer;
 	public ViewerCamera camera;
-
 	
 	//Labyrinth
 	private MazeGenerator labyrinth;
@@ -51,7 +46,6 @@ public class OpenGLCanvas extends Scene
 
 	private GLUquadric quadric;
 
-
 	//GL
 	private GL gl;
 	private GLU glu;
@@ -59,33 +53,23 @@ public class OpenGLCanvas extends Scene
 	private GlutFont printer = GlutFont.getRenderer();
 	
 	float cylinderRot;
-
-
+	private HandImage handImage;
 	
-
-	private float rotPyramid;			//rotation of the pyramid
-	
-	
-	public OpenGLCanvas() {
+	public OpenGLCanvas(HandImage handImage) {
 		getCounter().setEnabled(true);
 		getCounter().setFPSEnabled(true);
+		this.handImage = handImage;
 	}
 	
-
-	
-	
-
 	private static Cursor loadCursor(String cursorName, Point hotSpot)
 	{
 		Image cursor = new ImageIcon(OpenGLCanvas.class.getClassLoader().getResource(cursorName)).getImage();
 		return Toolkit.getDefaultToolkit().createCustomCursor(cursor, hotSpot,cursorName);
-		
 	}
 	
 	
 	public void reshape(GLDrawable glDrawable, int x, int y, int width, int height)
-	{
-		super.reshape(glDrawable, x, y, width, height);
+	{	super.reshape(glDrawable, x, y, width, height);
 		camera.reshape();
 	}
 	
@@ -128,7 +112,6 @@ public class OpenGLCanvas extends Scene
 		gl.glClearDepth(1.0);									//Enable Clearing of the Depth buffer
 		gl.glDepthFunc(GL.GL_LEQUAL);							//Type of Depth test
 		gl.glEnable(GL.GL_DEPTH_TEST);							//Enable Depth Testing
-
 		
 		labyrinth = new MazeGenerator(labyrinthSize);
 		labyrinth.generate();
@@ -246,16 +229,28 @@ public class OpenGLCanvas extends Scene
 		}
 		
 		gl.glEnable(GL.GL_LIGHTING);
-		gl.glTranslatef(Setup3D.objectPosition[0], Setup3D.objectPosition[1], Setup3D.objectPosition[2]);
+		float ret=1;
+		if(Mesh.sequences){
+			
+			ret = indexStep*(Mesh.distanceCircles*(Mesh.endSequence-Mesh.startSequence));
+			ret = -1*ret;
+		}
+		
+		gl.glTranslatef(Setup3D.objectPosition[0], Setup3D.objectPosition[1], Setup3D.objectPosition[2]+ret);
 		
 		//SimpleShape.drawGLUSphere(glDrawable, 2.0f, 40, false, GLU.GLU_FILL);//Test Circle
 
 		
 		gl.glBegin(Setup3D.mesh);
-    	drawMesh();
+		
+		if(!Mesh.sequences)
+			drawMesh();
+		else
+			drawMeshStepByStep();
+    	
     	gl.glEnd();
 
-		gl.glTranslatef(-Setup3D.objectPosition[0], -Setup3D.objectPosition[1], -Setup3D.objectPosition[2]);
+		gl.glTranslatef(-Setup3D.objectPosition[0], -Setup3D.objectPosition[1], -(Setup3D.objectPosition[2]+ret));
 		
 		gl.glDisable(GL.GL_LIGHT3);
 		gl.glDisable(GL.GL_LIGHT2);
@@ -274,10 +269,6 @@ public class OpenGLCanvas extends Scene
 	}
 	}
 
-
-
-
-
 	private void drawLights(GLDrawable glDrawable) {
 		gl.glColor3f(0.5f, 0.5f,0.5f);
 		
@@ -289,8 +280,6 @@ public class OpenGLCanvas extends Scene
 		
 		//Light
 			
-		
-		
 			gl.glTranslatef(Setup3D.lightPosition0[0], Setup3D.lightPosition0[1], Setup3D.lightPosition0[2]);
 			
 			if (Setup3D.eLight0){
@@ -329,18 +318,6 @@ public class OpenGLCanvas extends Scene
 	}
 
 	
-	
-	
-
-	private void drawMesh(){
-		Vector<Triangle3D> triangles = Mesh.getTriangles();
-		int s = triangles.size();
-		for (int i =0;i<s;i++){
-			triangles.get(i).draw(gl);
-		}
-	}
-	
-	
 	private boolean showKeys=false;
 	private void drawFPSInformation(GLDrawable glDrawable) {
 		Dimension size = glDrawable.getSize();
@@ -367,6 +344,7 @@ public class OpenGLCanvas extends Scene
 			printer.drawTextAt(glDrawable, "3 : Enable Light 3", 10, size.height-300, 0);
 			printer.drawTextAt(glDrawable, "4 : Enable Light 4", 10, size.height-320, 0);
 			printer.drawTextAt(glDrawable, "M : Meash Line/Full", 10, size.height-340, 0);
+			printer.drawTextAt(glDrawable, "N : Sequence On/Off", 10, size.height-360, 0);
 			
 		}else{
 			printer.drawTextAt(glDrawable, "F2 : Show/Hide Controls", 10, size.height-20, 0);
@@ -403,6 +381,8 @@ public class OpenGLCanvas extends Scene
 			case KeyEvent.VK_3:Setup3D.enableLight2() ;break;
 			case KeyEvent.VK_4:Setup3D.enableLight3() ;break;
 			case KeyEvent.VK_M:setMesh();break;
+			case KeyEvent.VK_N:Mesh.sequences=!Mesh.sequences;break;
+			
 			
 		}
 	}
@@ -447,19 +427,7 @@ public class OpenGLCanvas extends Scene
 		pressingKey=false;
 	}
 	
-	private float zOffset = -7.0f;
-	private int sens = -1;
-	public void increaseMovements(GLDrawable glDrawable)
-	{
-//		zOffset += sens*7.f*getCounter().getTimePassed()/2000;
-//		if(zOffset < -15.0f)
-//			sens = 1;
-//		else if(zOffset > -5.5f)
-//			sens = -1;
-//	
-		
-		
-	}
+
 	private boolean draw=true;
 
 	public boolean isDraw() {
@@ -469,6 +437,45 @@ public class OpenGLCanvas extends Scene
 		this.draw = draw;
 	}
 
-
+	private void drawMesh(){
+		Vector<Triangle3D> triangles = Mesh.getTriangles();
+		int s = triangles.size();
+		for (int i =0;i<s;i++){
+			triangles.get(i).draw(gl);
+		}
+	}
+	
+	private float zOffset =0f;
+	private int sens = -1;
+	
+	public void increaseMovements(GLDrawable glDrawable)
+	{
+		zOffset += (float)getCounter().getTimePassed()/(VisualData.sliderBarValue*10);
+		if(zOffset>1){
+			indexStep++;
+			zOffset=0;
+		}
+		if(indexStep == cantSteps)
+			indexStep=0;
+	}
+	
+	
+	int indexStep=0;
+	int cantSteps = Mesh.trianglesStep.size();
+	
+	private void drawMeshStepByStep(){
+		
+		
+		Vector<Vector> steps = Mesh.getTrianglesStep();
+		if(steps.size()>0){	
+			Vector<Triangle3D> triangles = steps.get(indexStep);
+			int s = triangles.size();
+			for (int i =0;i<s;i++){
+				triangles.get(i).draw(gl);
+			}
+		}else
+			Mesh.sequences=false;
+		
+	}
 	
 }

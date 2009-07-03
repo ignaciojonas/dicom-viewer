@@ -43,7 +43,6 @@ public class MeanDialog extends javax.swing.JDialog {
 	private JButton jButton1;
 	private JSpinner jSpinner1;
 
-
 	
 	private JTabbedPane tabbedPane1;
 	private HandImage handImageFiltered;

@@ -104,6 +104,8 @@ public class Setup3D {
 	
 	
 	public static float[] objectPosition= {2.0f, 2.0f, 7.0f, 1.0f};
+	public static String pathMesh;
+	
 }	
 
 

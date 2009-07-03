@@ -19,6 +19,7 @@ import draw2D.AllCirclesOnScreen;
 import draw2D.CircleOnScreen;
 import draw2D.InitCircleOnScreen;
 import draw3D.Mesh;
+import draw3D.Setup3D;
 import draw3D.scenario.screen.Point3D;
 import draw3D.scenario.screen.Triangle3D;
 
@@ -77,6 +78,17 @@ public void saveProject(String path){
 	}
 	pw.println("Mesh Path:");
 	pw.println(pathMesh);
+	pw.println("StartSequence:");
+	pw.println(Mesh.startSequence);
+	pw.println("EndSequence:");
+	pw.println(Mesh.endSequence);
+	pw.println("Sequences:");
+	pw.println(Mesh.sequences);
+	
+	pw.println("CircleSize:");
+	pw.println(Mesh.circleSize);
+	pw.println("Size:");
+	pw.println(Mesh.size);
 	pw.println("Enlarge Circles:");
 	for (Iterator iterator = circleAllPointsEnlarge.iterator(); iterator.hasNext();) {
 		CircleOnScreen circle = (CircleOnScreen) iterator.next();
@@ -119,6 +131,22 @@ public Project(String path) {
 					imagesPaths.add(f);
 				}
 				this.pathMesh=br.readLine();
+				Setup3D.pathMesh =pathMesh; 
+				if((linea=br.readLine()).equals("StartSequence:")){
+					Mesh.startSequence=Integer.parseInt(br.readLine());
+				}
+				if((linea=br.readLine()).equals("EndSequence:")){
+					Mesh.endSequence=Integer.parseInt(br.readLine());
+				}
+				if((linea=br.readLine()).equals("Sequences:")){
+					Mesh.sequences=Boolean.parseBoolean(br.readLine());
+				}
+				if((linea=br.readLine()).equals("CircleSize:")){
+					Mesh.circleSize=Integer.parseInt(br.readLine());
+				}
+				if((linea=br.readLine()).equals("Size:")){
+					Mesh.size=Integer.parseInt(br.readLine());
+				}
 		//		br.readLine();
 				if((linea=br.readLine()).equals("Enlarge Circles:")){
 					linea=br.readLine();

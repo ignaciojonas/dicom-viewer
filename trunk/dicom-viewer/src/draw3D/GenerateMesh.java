@@ -56,12 +56,14 @@ public class GenerateMesh extends Thread{
 				Mesh.pointsSUR+= " "+cantp+" "+p3d.toSUR()+"\n";
 				cantp++;
 			}
-			dist+=0.3f;
+			dist+=Mesh.distanceCircles;
 			VisualData.jProgressBar.setValue(i);  
 	    	VisualData.jProgressBar.repaint();
 		}
 		Mesh.cantPoints3D = cantp-1;
-		Mesh.generateTriangles(circleSize,size);
+		Mesh.circleSize=circleSize;
+		Mesh.size =size;
+		Mesh.generateTriangles();
 		System.gc();
 		VisualData.jProgressBar.setValue(size);
 		VisualData.jProgressBar.repaint();

@@ -38,25 +38,29 @@ public class HandImage extends JPanel{
  private Vector<Point> seeds = new Vector<Point>();
  private Vector<BufferedImage> imagesB = new Vector<BufferedImage>();
  
- 
  private InitCircleOnScreen initCircle = new InitCircleOnScreen();
  private AllCirclesOnScreen allCircles = new AllCirclesOnScreen();
- 
- 
-  private int index;
-  private BufferedImage image = null;
 
-  public void setCirclePoints(Vector<Point> circlePoints) {
-		this.initCircle = new InitCircleOnScreen(circlePoints,VisualData.initColor);
-	
-	}
-    
-    public InitCircleOnScreen getInitCircle() {
-    	return initCircle;
-    }
-public AllCirclesOnScreen getAllCircles() {
-	return allCircles;
-}
+
+ 
+ private int index;
+ private BufferedImage image = null;
+ 
+
+
+
+
+ public void setCirclePoints(Vector<Point> circlePoints) {
+	 this.initCircle = new InitCircleOnScreen(circlePoints,VisualData.initColor);
+
+ }
+
+ public InitCircleOnScreen getInitCircle() {
+	 return initCircle;
+ }
+ public AllCirclesOnScreen getAllCircles() {
+	 return allCircles;
+ }
 
 
  

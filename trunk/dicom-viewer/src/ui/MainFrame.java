@@ -21,6 +21,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -108,6 +112,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private JButton jButtonNext;
 	private JCheckBoxMenuItem jCheckBoxMenuItemSeeds;
 	private JLabel jLabelXY;
+	private JButton jButtonSE;
 	private JMenuItem jMenuConfigEnlarge;
 	private JSeparator jSeparator7;
 	private JSeparator jSeparator6;
@@ -209,7 +214,7 @@ public class MainFrame extends javax.swing.JFrame {
 	
 	public void load3D(){
 	glScene = GLDrawableFactory.getFactory().createGLCanvas(new GLCapabilities());
-	glEvents = new OpenGLCanvas();
+	glEvents = new OpenGLCanvas(handImage);
 	glScene.addGLEventListener(glEvents);
 	
 	this.addWindowListener(new WindowAdapter()
@@ -334,7 +339,7 @@ public class MainFrame extends javax.swing.JFrame {
 					jSlider1.setBounds(304, 8, 169, 25);
 					jSlider1.setMaximum(800);
 					jSlider1.setMinimum(10);
-					jSlider1.setValue(100);
+					jSlider1.setValue(VisualData.sliderBarValue);
 					jSlider1.setToolTipText("Slides velocity");
 					jSlider1.setEnabled(false);
 					jSlider1.addKeyListener(new KeyAdapter() {
@@ -349,6 +354,30 @@ public class MainFrame extends javax.swing.JFrame {
 					});
 				
 					
+				}
+				{
+					jButtonSE = new JButton();
+					jToolBar1.add(jButtonSE);
+					jButtonSE.setEnabled(false);
+					jButtonSE.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/begin.png")));
+					jButtonSE.setBounds(7, 1, 40, 40);
+					jButtonSE.addMouseListener(new MouseAdapter() {
+						public void mouseClicked(MouseEvent evt) {
+							jButtonSEMouseClicked(evt);
+						}
+					});
+					jButtonSE.setToolTipText("Start Sequence");
+					jButtonSE.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							jButtonSEActionPerformed(evt);
+						}
+					});
+				}
+				{
+					jSeparator7 = new JSeparator();
+					jToolBar1.add(jSeparator7);
+					jSeparator7.setOrientation(SwingConstants.VERTICAL);
+					jSeparator7.setBounds(52, 0, 4, 40);
 				}
 			}
 			{
@@ -1103,6 +1132,7 @@ public class MainFrame extends javax.swing.JFrame {
 			jButtonFirst.setEnabled(true);
 			jButtonLast.setEnabled(true);
 			jButtonNewWin.setEnabled(true);
+			jButtonSE.setEnabled(true);
 			jButtonPlay.setEnabled(true);
 			jSlider1.setEnabled(true);
 			loadDicomPropMenuItem.setEnabled(true);
@@ -1152,6 +1182,7 @@ public class MainFrame extends javax.swing.JFrame {
 			jButtonLast.setEnabled(true);
 			jButtonNewWin.setEnabled(true);
 			jButtonPlay.setEnabled(true);
+			jButtonSE.setEnabled(true);
 			jSlider1.setEnabled(true);
 			loadDicomPropMenuItem.setEnabled(true);
 			
@@ -1238,8 +1269,11 @@ public class MainFrame extends javax.swing.JFrame {
 	private void jSlider1StateChanged(ChangeEvent evt) {
 		if(tP!=null){
 			tP.setSleep(jSlider1.getValue());
-			jLabelSBSpiner.setText("Speed "+jSlider1.getValue()+" ms.");
+			
+			
 		}
+		VisualData.sliderBarValue =jSlider1.getValue(); 
+		jLabelSBSpiner.setText("Speed "+jSlider1.getValue()+" ms.");
 	}
 	
 	private void jButtonPlayKeyReleased(KeyEvent evt) {
@@ -1368,6 +1402,7 @@ public class MainFrame extends javax.swing.JFrame {
 					jButtonLast.setEnabled(true);
 					jButtonNewWin.setEnabled(true);
 					jButtonPlay.setEnabled(true);
+					jButtonSE.setEnabled(true);
 					jSlider1.setEnabled(true);
 					loadDicomPropMenuItem.setEnabled(true);
 			}
@@ -1576,6 +1611,7 @@ public class MainFrame extends javax.swing.JFrame {
 			jButtonLast.setEnabled(true);
 			jButtonNewWin.setEnabled(true);
 			jButtonPlay.setEnabled(true);
+			jButtonSE.setEnabled(true);
 			jSlider1.setEnabled(true);
 			loadDicomPropMenuItem.setEnabled(true);
 
@@ -1601,9 +1637,24 @@ public class MainFrame extends javax.swing.JFrame {
 					return;
 				}
 			}
-			SaveMeshSur sv=new SaveMeshSur(file.getAbsolutePath());
-			sv.save2();
-			Project p=new Project(handImage.getAllCircles().getCircleAllPointsEnlarge(),ImagesData.imagesPaths,sv.getPath());
+			String pathMesh ="";
+			if (this.jMenuItemGenerateMesh.isEnabled()){
+				SaveMeshSur sv=new SaveMeshSur(file.getAbsolutePath());
+				sv.save2();
+				pathMesh = sv.getPath();
+			}else{
+				try{
+				    FileInputStream fis = new FileInputStream(Setup3D.pathMesh); 
+				    pathMesh = file.getAbsolutePath()+".sur";
+				    FileOutputStream fos = new FileOutputStream(pathMesh); 
+				    FileChannel canalFuente = fis.getChannel(); 
+				    FileChannel canalDestino = fos.getChannel(); 
+				    canalFuente.transferTo(0, canalFuente.size(), canalDestino); 
+				    fis.close(); 
+				    fos.close(); 
+				 }catch (IOException ex) {}
+			}
+			Project p=new Project(handImage.getAllCircles().getCircleAllPointsEnlarge(),ImagesData.imagesPaths,pathMesh);
 			p.saveProject(file.getAbsolutePath());
 			
 			
@@ -1615,5 +1666,30 @@ public class MainFrame extends javax.swing.JFrame {
 			mD.setVisible(true);
 		
 	}
+		
+		private void jButtonSEActionPerformed(ActionEvent evt) {
+			if (jButtonSE.getToolTipText().equals("Start Sequence")){
+				jButtonSE.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/end.png")));
+				jButtonSE.setToolTipText("In Sequence");
+				Mesh.startSequence = handImage.getIndex();
+				
+			}else
+				if (jButtonSE.getToolTipText().equals("In Sequence")){
+					jButtonSE.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/endend.png")));
+					jButtonSE.setToolTipText("Middle click to restart");
+					Mesh.endSequence = handImage.getIndex();
+				}
+			System.out.println(Mesh.startSequence);
+			System.out.println(Mesh.endSequence);
+			System.out.println();
+		}
+		
+		private void jButtonSEMouseClicked(MouseEvent evt) {
+			if(evt.getButton()== evt.BUTTON2)
+			{
+				jButtonSE.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/begin.png")));
+				jButtonSE.setToolTipText("Start Sequence");
+			}
+		}
 
 }

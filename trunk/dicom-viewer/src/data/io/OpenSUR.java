@@ -25,7 +25,7 @@ public class OpenSUR{
 		Mesh.setPoints(points);
 		Mesh.setTriangles(triangles);
 		Mesh.cantPoints3D=this.cantPoint;
-		
+		Mesh.generateTrianglesSteps();
 		
 		
 	}

@@ -24,6 +24,7 @@ public class VisualData {
 	public static  boolean viewSeeds = false;
 	public static  boolean viewCircle = true;
 	public static boolean viewCircleAll = true;
+	public static int sliderBarValue = 100;
 
 	public static Color initColor = Color.RED;
 	public static Color enlargeColor = Color.GREEN;
