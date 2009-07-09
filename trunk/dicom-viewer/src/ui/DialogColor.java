@@ -27,14 +27,14 @@ public class DialogColor extends javax.swing.JDialog {
 	private JButton choose;
 
 	private JPanel panel;
-	EnlargeManualyDialog enlargeManualyDialog=null;
+
 	EnlargeDialog enlargeDialog = null;
 	JPanel panelColor;
-	public DialogColor(EnlargeManualyDialog enlargeManualyDialog, JPanel panelColor) {
+	public DialogColor(JPanel panelColor) {
 		
 		super();
 		this.panel=new JPanel();
-		this.enlargeManualyDialog = enlargeManualyDialog;
+	
 		
 		this.panelColor = panelColor;
 		initGUI();

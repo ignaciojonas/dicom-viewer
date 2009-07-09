@@ -50,7 +50,7 @@ import draw3D.Line;
 * THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
 * LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
 */
-public class EnlargeManualyDialog extends javax.swing.JDialog {
+public class EnlargeSnakesDialog extends javax.swing.JDialog {
 	
 	{
 		//Set Look & Feel
@@ -62,8 +62,7 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 	}
 
 	private JLabel jLabel1;
-	private JButton jButton1;
-	
+
 	private JPanel normalColorPanel;
 	public Color normalColor = VisualData.normal ;
 	
@@ -95,9 +94,9 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 	private JButton jButtonOK;
 	private AllCirclesOnScreen allCircles;
 	
-	public EnlargeManualyDialog(JFrame frame,HandImage handImage) {
+	public EnlargeSnakesDialog(JFrame frame,HandImage handImage) {
 		super(frame);
-		this.setTitle("Manualy Enlarge");
+		this.setTitle("Snakes Enlarge");
 		this.handImage = handImage;
 		this.allCircles = handImage.getAllCircles();
 		initGUI();
@@ -177,18 +176,6 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 				initColorPanel.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent evt) {
 						initColorPanelMouseClicked(evt);
-					}
-				});
-			}
-			{
-				jButton1 = new JButton();
-				getContentPane().add(jButton1);
-				jButton1.setText("Apply");
-				jButton1.setBounds(51, 78, 81, 21);
-				jButton1.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/configenlarge.gif")));
-				jButton1.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
-						jButton1ActionPerformed(evt);
 					}
 				});
 			}
@@ -307,8 +294,7 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 	
 	private void jButton1ActionPerformed(ActionEvent evt) {
 
-		ImagesData.MAX_DISTANCE=((Integer) jSpinner1.getValue());
-		ImagesData.MAX_DISTANCE_NEIG=((Integer) jSpinner2.getValue());
+		
 		jButtonPreviewMouseClicked(null);
 		
 	
@@ -350,6 +336,9 @@ public class EnlargeManualyDialog extends javax.swing.JDialog {
 	}
 	
 	private void jButtonPreviewMouseClicked(MouseEvent evt) {
+		ImagesData.MAX_DISTANCE=((Integer) jSpinner1.getValue());
+		ImagesData.MAX_DISTANCE_NEIG=((Integer) jSpinner2.getValue());
+		
 		handImage.setImage();
 		
 		handImage.previewCircle(handImage.getIndex(),initColorPanel.getBackground(),enlargeColorPanel.getBackground(),reduceColorPanel.getBackground(),normalColorPanel.getBackground());

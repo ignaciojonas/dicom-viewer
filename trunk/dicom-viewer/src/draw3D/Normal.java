@@ -25,4 +25,6 @@ public Point getNormalSubtract(Point p, int avance){
 	int yyy=(int) Math.round(yy);
 	return new Point((int)Math.round(xx),(int)Math.round(yy));
 }
+
+
 }

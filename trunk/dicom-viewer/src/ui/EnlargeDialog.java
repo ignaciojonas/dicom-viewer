@@ -20,6 +20,7 @@ import javax.swing.border.BevelBorder;
 
 import data.ImagesData;
 import data.VisualData;
+import draw2D.StaticInitCircle;
 import draw2D.filtering.MeanFilter;
 import draw2D.filtering.MedianFilter;
 
@@ -50,8 +51,6 @@ public class EnlargeDialog extends javax.swing.JDialog {
 	private JLabel jLabel1;
 	private JButton jButton1;
 	private JLabel jLabel5;
-	private JLabel jLabel8;
-	private JSpinner jSpinner4;
 	private JSpinner jSpinner3;
 	private JLabel jLabel7;
 	private JPanel normalColorPanel;
@@ -218,19 +217,6 @@ public class EnlargeDialog extends javax.swing.JDialog {
 				jSpinner3.setValue(ImagesData.REDUCE);
 				jSpinner3.setBounds(120, 82, 39, 22);
 			}
-			{
-				
-				jSpinner4 = new JSpinner();
-				getContentPane().add(jSpinner4);
-				jSpinner4.setValue(ImagesData.POINTSBETWEEN);
-				jSpinner4.setBounds(120, 115, 39, 21);
-			}
-			{
-				jLabel8 = new JLabel();
-				getContentPane().add(jLabel8);
-				jLabel8.setText("Init Point Between:");
-				jLabel8.setBounds(12, 105, 111, 40);
-			}
 			this.setResizable(false);
 			this.setLocationRelativeTo(null);
 			this.setSize(347, 226);
@@ -244,7 +230,6 @@ public class EnlargeDialog extends javax.swing.JDialog {
 		ImagesData.MAX_DISTANCE=((Integer) jSpinner1.getValue());
 		ImagesData.MAX_DISTANCE_NEIG=((Integer) jSpinner2.getValue());
 		ImagesData.REDUCE = ((Integer) jSpinner3.getValue());
-		ImagesData.POINTSBETWEEN = ((Integer) jSpinner4.getValue());
 		VisualData.enlargeColor = enlargeColorPanel.getBackground();
 		VisualData.reduceColor = reduceColorPanel.getBackground();
 		VisualData.normal = normalColorPanel.getBackground();

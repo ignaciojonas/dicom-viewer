@@ -2,7 +2,10 @@ package ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -16,6 +19,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -64,6 +68,7 @@ import data.io.SaveFile;
 import data.io.SaveFilteredImages;
 import data.io.SaveMeshSur;
 import draw2D.InitCircleOnScreen;
+import draw2D.StaticInitCircle;
 import draw2D.filtering.EnlargeCircle;
 import draw2D.filtering.MeanFilter;
 import draw2D.filtering.RegionGrowing;
@@ -113,7 +118,12 @@ public class MainFrame extends javax.swing.JFrame {
 	private JCheckBoxMenuItem jCheckBoxMenuItemSeeds;
 	private JLabel jLabelXY;
 	private JButton jButtonSE;
+	private JButton jButtonSnake;
+	private JButton jButtonEM;
+	private JSeparator jSeparator8;
+	private JButton jButtonSetIC;
 	private JMenuItem jMenuConfigEnlarge;
+	private JMenuItem jMenuConfigInitCircle;
 	private JSeparator jSeparator7;
 	private JSeparator jSeparator6;
 	private JMenuItem jMenuItemEnlargeCircle;
@@ -123,8 +133,10 @@ public class MainFrame extends javax.swing.JFrame {
 	private JLabel jLabelNameImage;
 	private JMenuItem jMenuItemDCircle;
 	private JMenuItem jMenuItemPrue;
+	private JMenuItem jMenuItemEnlargeCircleSnake;
 	private JCheckBoxMenuItem jCheckBoxMenuItemCircle;
 	private JCheckBoxMenuItem jCheckBoxMenuItemCircleAll;
+	private JCheckBoxMenuItem jCheckBoxMCMenuItemSeeds;
 	private JMenuItem jMenuItemOpenDir;
 	private JMenuItem jMenuItemSaveFilters;
 	private JButton jButtonBack;
@@ -160,6 +172,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private JPanel jPanelStatusBar;
 	private JSlider jSlider1;
 	private JSeparator jSeparator3;
+	private JSeparator jSeparator9;
 	private JButton jButtonLast;
 	private JButton jButtonFirst;
 	private JSplitPane jSplitPane1;
@@ -182,8 +195,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private HandImage handImage;
 	private HandImage handImageFiltered;
 	
-	//Mover el circulo
-	private Point origen;
+
 
 	/**
 	* Auto-generated main method to display this JFrame
@@ -217,8 +229,7 @@ public class MainFrame extends javax.swing.JFrame {
 	glEvents = new OpenGLCanvas(handImage);
 	glScene.addGLEventListener(glEvents);
 	
-	this.addWindowListener(new WindowAdapter()
-	{
+	this.addWindowListener(new WindowAdapter() {
 		public void windowClosing(WindowEvent e)
 		{
 			glEvents.keyReleased(new KeyEvent((Component)e.getSource(), e.getID(), 0, 0, KeyEvent.VK_ESCAPE, KeyEvent.CHAR_UNDEFINED));
@@ -237,6 +248,7 @@ public class MainFrame extends javax.swing.JFrame {
 			
 			BorderLayout thisLayout = new BorderLayout();
 			getContentPane().setLayout(thisLayout);
+			
 
 			{
 				jToolBar1 = new JToolBar();
@@ -279,9 +291,8 @@ public class MainFrame extends javax.swing.JFrame {
 				{
 					jButtonNewWin = new JButton();
 					jToolBar1.add(jButtonNewWin);
-					jButtonNewWin.setText("Open new window");
 					jButtonNewWin.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/new_win.gif")));
-					jButtonNewWin.setBounds(500, 6, 121, 27);
+					jButtonNewWin.setBounds(500, 4, 39, 32);
 					jButtonNewWin.setToolTipText("Open image below in a new Window");
 					jButtonNewWin.setEnabled(false);
 					jButtonNewWin.addActionListener(new ActionListener() {
@@ -379,6 +390,45 @@ public class MainFrame extends javax.swing.JFrame {
 					jSeparator7.setOrientation(SwingConstants.VERTICAL);
 					jSeparator7.setBounds(52, 0, 4, 40);
 				}
+				{
+					jButtonSetIC = new JButton();
+					jToolBar1.add(jButtonSetIC);
+					jButtonSetIC.setBounds(556, 1, 43, 39);
+					jButtonSetIC.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/SetICLarge.png")));
+					jButtonSetIC.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							jButtonSetICActionPerformed(evt);
+						}
+					});
+				}
+				{
+					jSeparator8 = new JSeparator();
+					jToolBar1.add(jSeparator8);
+					jSeparator8.setOrientation(SwingConstants.VERTICAL);
+					jSeparator8.setBounds(549, -5, 10, 47);
+				}
+				{
+					jButtonEM = new JButton();
+					jToolBar1.add(jButtonEM);
+					jButtonEM.setBounds(601, 1, 44, 38);
+					jButtonEM.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/EnlargeLarge.png")));
+					jButtonEM.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							jButtonEMActionPerformed(evt);
+						}
+					});
+				}
+				{
+					jButtonSnake = new JButton();
+					jToolBar1.add(jButtonSnake);
+					jButtonSnake.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/snakesLarge.png")));
+					jButtonSnake.setBounds(645, 1, 39, 39);
+					jButtonSnake.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							jButtonSnakeActionPerformed(evt);
+						}
+					});
+				}
 			}
 			{
 				jSplitPane1 = new JSplitPane();
@@ -412,14 +462,21 @@ public class MainFrame extends javax.swing.JFrame {
 								}
 							});
 							handImage.addMouseListener(new MouseAdapter() {
+								public void mousePressed(MouseEvent evt) {
+									handImageMousePressed(evt);
+								}
+								public void mouseReleased(MouseEvent evt) {
+									handImageMouseReleased(evt);
+								}
 								public void mouseClicked(MouseEvent evt) {
 									handImageMouseClicked(evt);
 								}
 								
 								
 							});
+							
 							handImage.addMouseMotionListener(new MouseMotionAdapter() {
-
+								
 								public void mouseDragged(MouseEvent e) {
 									handImageMouseDragged(e);
 								}
@@ -427,7 +484,10 @@ public class MainFrame extends javax.swing.JFrame {
 								
 							});
 							
+							
 						}
+						
+						
 					}
 					{
 						jScrollPaneFilter = new JScrollPane();
@@ -460,7 +520,7 @@ public class MainFrame extends javax.swing.JFrame {
 						});
 						
 					}
-					
+
 				}
 				{
 					jScrollPane2 = new JScrollPane();
@@ -718,6 +778,17 @@ public class MainFrame extends javax.swing.JFrame {
 								}
 							});
 						}
+						{
+							jMenuConfigInitCircle = new JMenuItem();
+							jMenu5.add(jMenuConfigInitCircle);
+							jMenuConfigInitCircle.setText("Config. Init Circle");
+							jMenuConfigInitCircle.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/configInitC.gif")));
+							jMenuConfigInitCircle.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent evt) {
+									jMenuConfigInitCircleActionPerformed(evt);
+								}
+							});
+						}
 						
 						
 				}
@@ -776,6 +847,7 @@ public class MainFrame extends javax.swing.JFrame {
 
 						});
 					}
+					
 					{
 						jCheckBoxMenuItemCircleAll = new JCheckBoxMenuItem();
 						jMenu4.add(jCheckBoxMenuItemCircleAll);
@@ -795,7 +867,22 @@ public class MainFrame extends javax.swing.JFrame {
 					jMenu2D = new JMenu();
 					jMenuBar1.add(jMenu2D);
 					jMenu2D.setText("2D");
-					
+					{
+						jCheckBoxMCMenuItemSeeds = new JCheckBoxMenuItem();
+						jMenu2D.add(jCheckBoxMCMenuItemSeeds);
+						jCheckBoxMCMenuItemSeeds.setText("Manualy Circle");
+						jCheckBoxMCMenuItemSeeds.setSelected(StaticInitCircle.manualyC);
+						jCheckBoxMCMenuItemSeeds.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								StaticInitCircle.manualyC = !StaticInitCircle.manualyC;
+							}
+
+						});
+					}
+					{
+						jSeparator9 = new JSeparator();
+						jMenu2D.add(jSeparator9);
+					}
 					{
 						jMenuItemOpenMalla = new JMenuItem();
 						jMenu2D.add(jMenuItemOpenMalla);
@@ -950,6 +1037,23 @@ public class MainFrame extends javax.swing.JFrame {
 					jMenu3D = new JMenu();
 					jMenuBar1.add(jMenu3D);
 					jMenu3D.setText("3D");
+					{
+						jMenuItemEnlargeCircleSnake = new JMenuItem();
+						jMenu3D.add(jMenuItemEnlargeCircleSnake);
+						jMenuItemEnlargeCircleSnake.setText("Enlarge Circle Snakes");
+						jMenuItemEnlargeCircleSnake.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/snakes.gif")));
+						
+						jMenuItemEnlargeCircleSnake.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								jMenuItemEnlargeCircleSnakeActionPerformed(evt);
+								jMenuItemGenerateMesh.setEnabled(true);
+							}
+
+							
+
+						
+						});
+					}
 					{
 						jMenuItemEnlargeCircleManualy = new JMenuItem();
 						jMenu3D.add(jMenuItemEnlargeCircleManualy);
@@ -1214,8 +1318,7 @@ public class MainFrame extends javax.swing.JFrame {
 	}
 	
 	private void jButtoncccActionPerformed(ActionEvent evt) {
-		
-
+	
 		if (jTabbedPane1.getSelectedIndex()== 0)//2D
 			new ImageDisplay(ImagesData.imagesB,handImage.getIndex());
 		if (jTabbedPane1.getSelectedIndex()== 1)//Filter
@@ -1327,36 +1430,8 @@ public class MainFrame extends javax.swing.JFrame {
 		}
 	}
 	
-	private void handImageMouseClicked(MouseEvent evt) {
-		if (evt.getButton()== MouseEvent.BUTTON1){
-			if (ImagesData.imagesB.size()>0)
-				handImage.addSeed(new Point (evt.getX(),evt.getY()));
-		}
-		if (evt.getButton()== MouseEvent.BUTTON3){
-				handImage.addPointToInitCircle(new Point (evt.getX(),evt.getY()));
-		}
-	}
-
-	protected void handImageMouseDragged(MouseEvent evt) {
-		InitCircleOnScreen circle=handImage.getInitCircle();
-		if(origen!=null){
-			int x_origen= origen.x;
-			int y_origen= origen.y;
-			int sum_x=evt.getX()-x_origen;
-			int sum_y=evt.getY()-y_origen;
-			circle.sumarXY(sum_x, sum_y);
-			handImage.setImage();
-			origen = new Point(evt.getX(),evt.getY());
-			
-		}
-		else{
-			if(circle.isSelected(evt.getX(), evt.getY())){
-				origen = new Point(evt.getX(),evt.getY());
-			}
-		}
-		
-	}
-
+	
+	
 	public void filterRGMenuItemActionPerformed(ActionEvent evt) {
 		RGDialog rG= new RGDialog(this,jTabbedPane1,handImageFiltered,handImage);
 		rG.setVisible(true);
@@ -1482,9 +1557,7 @@ public class MainFrame extends javax.swing.JFrame {
 	}
 
 	
-	private void handImageMouseMoved(MouseEvent evt) {
-		jLabelXY.setText("x: "+evt.getX()+" y: "+evt.getY());
-	}
+
 	
 	private void saveMallaActionPerformed(ActionEvent evt) {
 		filechooser = new JFileChooser(new File("c:\\"));
@@ -1568,6 +1641,12 @@ public class MainFrame extends javax.swing.JFrame {
 		EnlargeDialog ed=new EnlargeDialog(this);
 		ed.setVisible(true);
 	}
+	private void jMenuConfigInitCircleActionPerformed(ActionEvent evt) {
+		EditInitcircleDialog ed=new EditInitcircleDialog(this,handImage);
+		ed.setVisible(true);
+	}
+	
+	
 	private void openMeshActionPerformed(ActionEvent evt) {
 		filechooser = new JFileChooser(new File("c:\\"));
 		filechooser.setMultiSelectionEnabled(false);
@@ -1679,9 +1758,7 @@ public class MainFrame extends javax.swing.JFrame {
 					jButtonSE.setToolTipText("Middle click to restart");
 					Mesh.endSequence = handImage.getIndex();
 				}
-			System.out.println(Mesh.startSequence);
-			System.out.println(Mesh.endSequence);
-			System.out.println();
+			
 		}
 		
 		private void jButtonSEMouseClicked(MouseEvent evt) {
@@ -1691,5 +1768,103 @@ public class MainFrame extends javax.swing.JFrame {
 				jButtonSE.setToolTipText("Start Sequence");
 			}
 		}
+		
+		
+		private void handImageMouseClicked(MouseEvent evt) {
+			if(StaticInitCircle.drawPC){
+				StaticInitCircle.DPCxC=evt.getX();
+				StaticInitCircle.DPCyC=evt.getY();
+				
+			}else{
+				if (evt.getButton()== MouseEvent.BUTTON1){
+					if (ImagesData.imagesB.size()>0)
+						handImage.addSeed(new Point (evt.getX(),evt.getY()));
+				}
+				if (evt.getButton()== MouseEvent.BUTTON3){
+					if(StaticInitCircle.manualyC)
+						handImage.addPointToInitCircle(new Point (evt.getX(),evt.getY()));
+				}}
+		}
+		
+		
+		private void handImageMouseReleased(MouseEvent evt) {
+			if(StaticInitCircle.drawPC){
+				StaticInitCircle.drawPerfectCircle(evt,handImage);
+				StaticInitCircle.drawPC = false;
+				StaticInitCircle.origen=null;	
+				VisualData.jToggleButtonPC.setSelected(false);
+			}
+			if(evt.getModifiersEx()==4096){
+				StaticInitCircle.destinoOP = new Point(evt.getX(),evt.getY());
+			}
+			StaticInitCircle.indexMoveOP=-1;
+			handImage.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		}
+		
+		private void handImageMousePressed(MouseEvent evt) {
+			if(StaticInitCircle.drawPC){
+				StaticInitCircle.DPCxC = evt.getX();
+				StaticInitCircle.DPCyC = evt.getY();
+			}
+			if((evt.getModifiersEx()==4096)||(evt.getModifiersEx()==2048)){
+				InitCircleOnScreen init = handImage.getInitCircle();
+				StaticInitCircle.indexMoveOP =init.containts(new Point (evt.getX(),evt.getY())); 
+				if(StaticInitCircle.indexMoveOP!=-1){
+					handImage.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+					StaticInitCircle.setOrigenOP(new Point (evt.getX(),evt.getY()),handImage);
+					
+						
+				}
+			}
+			
+		}
+		protected void handImageMouseDragged(MouseEvent evt) {
+	
+			if(StaticInitCircle.drawPC){//Dibujar Draw Perfect Circle
+				StaticInitCircle.drawPerfectCircle(evt,handImage);	
+			}else{
+				if(evt.getModifiersEx()==1024){//Button1 MOVER
+					StaticInitCircle.moveInitCircle(evt,handImage);
+				}else
+					if((evt.getModifiersEx()==2048)&&(StaticInitCircle.indexMoveOP!=-1)){
+						StaticInitCircle.destinoOP = new Point(evt.getX(),evt.getY());
+						StaticInitCircle.moveOnePoint(evt, handImage);
+					}else if((evt.getModifiersEx()==4096)&&(StaticInitCircle.indexMoveOP!=-1)){
+						StaticInitCircle.destinoOP = new Point(evt.getX(),evt.getY());
+						StaticInitCircle.moveNormalOnePoint(evt, handImage);
+					}
+			}
+		}
+		
+		private void handImageMouseMoved(MouseEvent evt) {
+			jLabelXY.setText("x: "+evt.getX()+" y: "+evt.getY());
+			if(StaticInitCircle.drawPC)
+				handImage.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+			else{
+				InitCircleOnScreen init = handImage.getInitCircle();
+				int i = init.containts(new Point (evt.getX(),evt.getY()));
 
+				if(i!=-1)
+					handImage.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				else
+					handImage.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			}
+		}
+		
+		private void jButtonSetICActionPerformed(ActionEvent evt) {
+			jMenuConfigInitCircleActionPerformed(evt);
+		}
+		
+		private void jButtonEMActionPerformed(ActionEvent evt) {
+			jMenuItemEnlargeCircleManualyActionPerformed(evt);
+			jMenuItemGenerateMesh.setEnabled(true);
+		}
+		public void jMenuItemEnlargeCircleSnakeActionPerformed(ActionEvent evt) {
+			EnlargeSnakesDialog e= new EnlargeSnakesDialog(this,this.handImage);
+			e.setVisible(true);
+		}
+		
+		private void jButtonSnakeActionPerformed(ActionEvent evt) {
+			jMenuItemEnlargeCircleSnakeActionPerformed(null);
+		}
 }

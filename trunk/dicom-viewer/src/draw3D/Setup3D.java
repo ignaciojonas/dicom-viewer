@@ -15,6 +15,7 @@ public class Setup3D {
 	public static final String light="sounds/light.wav";
 	public static final String light2="sounds/light2.wav";
 	public static String cross = "textures/D01.png";
+	public static String circle = "textures/GoldRing.png";
 	public static int mesh = GL.GL_TRIANGLES;
 	
 	public static String FPSInfo="FPS";
@@ -89,11 +90,6 @@ public class Setup3D {
 			new PlayWav(Setup3D.light2,0);
 		eLight3=!eLight3;
 	}
-	
-	
-	
-
-	
 	
 	
 	  //ancho,alto,lejos	

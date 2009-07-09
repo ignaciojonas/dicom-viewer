@@ -248,7 +248,6 @@ public void enlargeCircleForAllWithReduce(){
 	this.setImage();
 }
 
-
 public void enlargeCircleForAll(){
 	for(int i=0;i<imagesB.size();i++){
 		EnlargeCircle e = new EnlargeCircle(this,1,imagesB.get(i),this.initCircle);
@@ -349,6 +348,18 @@ public void generateMesh(){
 public void setCircleAllPontsEnlarge(
 		Vector<CircleOnScreen> circleAllPointsEnlarge) {
 	allCircles.setCircleAllPointsEnlarge(circleAllPointsEnlarge);
+	
+}
+
+public void setInitCircleColor(Color background) {
+	VisualData.initColor=background;
+	this.initCircle.setColor(VisualData.initColor);
+	
+	
+}
+
+public void setCursor(int crosshairCursor) {
+	this.setCursor(crosshairCursor);
 	
 }
 

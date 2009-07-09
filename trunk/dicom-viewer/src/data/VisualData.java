@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 import javax.swing.JTable;
+import javax.swing.JToggleButton;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -30,6 +31,8 @@ public class VisualData {
 	public static Color enlargeColor = Color.GREEN;
 	public static Color reduceColor = Color.CYAN;
 	public static Color normal = Color.WHITE;
+	
+	public static JToggleButton jToggleButtonPC;
 	
 	public static void setjLabelSBImages(String text){
 		if(jLabelSBImages!=null)
