@@ -242,14 +242,10 @@ public class EnlargeCircle {
 							}
 						}
 					}
-					
-					
 				}
 			this.enlargedCircle =new CircleOnScreen(newCircle,Color.GREEN); 
 			return enlargedCircle;
-			
-
-		}
+	}
 	
 	public Point getNormal(Point p1,Point p2){
 		int vx = p2.x - p1.x;

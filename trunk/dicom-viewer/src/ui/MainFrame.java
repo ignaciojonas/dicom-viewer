@@ -116,8 +116,12 @@ public class MainFrame extends javax.swing.JFrame {
 	private JTable jTable1;
 	private JButton jButtonNext;
 	private JCheckBoxMenuItem jCheckBoxMenuItemSeeds;
+	private JCheckBoxMenuItem jCheckBoxViewLateral;
 	private JLabel jLabelXY;
 	private JButton jButtonSE;
+	private JButton jButton1;
+	private JScrollPane jScrollPaneL;
+	private RepaintPanel jPanelLateral;
 	private JButton jButtonSnake;
 	private JButton jButtonEM;
 	private JSeparator jSeparator8;
@@ -146,6 +150,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private JMenuItem pasteMenuItem;
 	private JMenuItem copyMenuItem;
 	private JMenuItem dicomPropMenuItem;
+	private JMenuItem jMenuItemViewGraph;
 	private JMenuItem loadDicomPropMenuItem;
 	private JMenuItem load3DMenuItem;
 	private JMenuItem filterMeanMenuItem;
@@ -163,6 +168,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private JMenu jMenuFilter;
 	private JMenu jMenu3D;
 	public JScrollPane jScrollPaneFilter;
+	public JScrollPane jScrollPaneLateral;
 	private JSeparator jSeparator5;
 	private JInternalFrame jInternalFrame3D;
 	public JTabbedPane jTabbedPane1;
@@ -190,6 +196,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private ThreadPlay tPFilter=null;
 	private JFileChooser filechooser = null;
 	private JMenuItem openProjectMenuItem;
+	private Distribucion ed;
 	
 	//Imagen
 	private HandImage handImage;
@@ -429,6 +436,17 @@ public class MainFrame extends javax.swing.JFrame {
 						}
 					});
 				}
+				{
+					jButton1 = new JButton();
+					jToolBar1.add(jButton1);
+					jButton1.setText("jButton1");
+					jButton1.setBounds(684, 12, 47, 21);
+					jButton1.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							jButton1ActionPerformed(evt);
+						}
+					});
+				}
 			}
 			{
 				jSplitPane1 = new JSplitPane();
@@ -456,7 +474,6 @@ public class MainFrame extends javax.swing.JFrame {
 							getContentPane().add(handImage);
 							jScrollPane1.setViewportView(handImage);
 							handImage.addMouseMotionListener(new MouseMotionAdapter() {
-								
 								public void mouseMoved(MouseEvent evt) {
 									handImageMouseMoved(evt);
 								}
@@ -480,14 +497,22 @@ public class MainFrame extends javax.swing.JFrame {
 								public void mouseDragged(MouseEvent e) {
 									handImageMouseDragged(e);
 								}
-								
-								
 							});
-							
-							
 						}
 						
 						
+					}
+					{
+						jScrollPaneL = new JScrollPane();
+						jScrollPaneL.setPreferredSize(new java.awt.Dimension(600, 291));
+						jTabbedPane1.addTab("Lateral", null, jScrollPaneL, null);
+						{
+							jPanelLateral = new RepaintPanel();
+							
+							getContentPane().add(jPanelLateral);
+							jScrollPaneL.setViewportView(jPanelLateral);
+							jPanelLateral.setLayout(null);
+						}
 					}
 					{
 						jScrollPaneFilter = new JScrollPane();
@@ -815,6 +840,18 @@ public class MainFrame extends javax.swing.JFrame {
 					
 					}
 					{
+						jMenuItemViewGraph = new JMenuItem();
+						jMenu4.add(jMenuItemViewGraph);
+						jMenuItemViewGraph.setText("Graph");
+						jMenuItemViewGraph.setEnabled(false);
+						jMenuItemViewGraph.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/graph.gif")));
+						jMenuItemViewGraph.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								jMenuItemViewGraphActionPerformed(evt);
+							}
+						});
+					}
+					{
 						jSeparator1 = new JSeparator();
 						jMenu4.add(jSeparator1);
 					}
@@ -822,6 +859,18 @@ public class MainFrame extends javax.swing.JFrame {
 					{
 						jSeparator1 = new JSeparator();
 						jMenu4.add(jSeparator1);
+					}
+					{
+						jCheckBoxViewLateral = new JCheckBoxMenuItem();
+						jMenu4.add(jCheckBoxViewLateral);
+						jCheckBoxViewLateral.setText("View Lateral");
+						jCheckBoxViewLateral.setSelected(false);
+						jCheckBoxViewLateral.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent evt) {
+								viewLateralMenuItemActionPerformed(evt);
+							}
+
+						});
 					}
 					{
 						jCheckBoxMenuItemSeeds = new JCheckBoxMenuItem();
@@ -1302,7 +1351,7 @@ public class MainFrame extends javax.swing.JFrame {
 	private void jButtonBackActionPerformed(ActionEvent evt) {
 		if (jTabbedPane1.getSelectedIndex()== 0)//2D
 			handImage.backImage();
-		if (jTabbedPane1.getSelectedIndex()== 1)//Filter
+		if (jTabbedPane1.getSelectedIndex()== 2)//Filter
 			handImageFiltered.backImage();
 		
 		
@@ -1313,7 +1362,7 @@ public class MainFrame extends javax.swing.JFrame {
 		
 		if (jTabbedPane1.getSelectedIndex()== 0)//2D
 			handImage.nextImage();
-		if (jTabbedPane1.getSelectedIndex()== 1)//Filter
+		if (jTabbedPane1.getSelectedIndex()== 2)//Filter
 			handImageFiltered.nextImage();
 	}
 	
@@ -1321,7 +1370,7 @@ public class MainFrame extends javax.swing.JFrame {
 	
 		if (jTabbedPane1.getSelectedIndex()== 0)//2D
 			new ImageDisplay(ImagesData.imagesB,handImage.getIndex());
-		if (jTabbedPane1.getSelectedIndex()== 1)//Filter
+		if (jTabbedPane1.getSelectedIndex()== 2)//Filter
 			new ImageDisplay(ImagesData.imagesBFiltered,handImageFiltered.getIndex());
 	}
 	
@@ -1330,7 +1379,7 @@ public class MainFrame extends javax.swing.JFrame {
 
 		if (jTabbedPane1.getSelectedIndex()== 0)//2D
 			handImage.firstImage();
-		if (jTabbedPane1.getSelectedIndex()== 1)//Filter
+		if (jTabbedPane1.getSelectedIndex()== 2)//Filter
 			handImageFiltered.firstImage();
 		
 	}
@@ -1339,7 +1388,7 @@ public class MainFrame extends javax.swing.JFrame {
 		
 		if (jTabbedPane1.getSelectedIndex()== 0)//2D
 			handImage.lastImage();
-		if (jTabbedPane1.getSelectedIndex()== 1)//Filter
+		if (jTabbedPane1.getSelectedIndex()== 2)//Filter
 			handImageFiltered.lastImage();
 	}
 	
@@ -1450,14 +1499,6 @@ public class MainFrame extends javax.swing.JFrame {
 		
 	}
 	
-	private void jTabbedPane1MouseClicked(MouseEvent evt) {
-		if(jTabbedPane1.getSelectedIndex()==0)
-			handImage.setImage();
-		else
-			if(jTabbedPane1.getSelectedIndex()==1)
-				handImageFiltered.setImage();
-	
-	}
 	
 	private void openDirActionPerformed(ActionEvent evt) {
 		// TODO Auto-generated method stub
@@ -1493,7 +1534,6 @@ public class MainFrame extends javax.swing.JFrame {
 	}
 	
 	private void viewSeedsMenuItemActionPerformed(ActionEvent evt) {
-		
 		VisualData.viewSeeds=jCheckBoxMenuItemSeeds.isSelected();
 		handImage.setImage();
 	}
@@ -1771,6 +1811,13 @@ public class MainFrame extends javax.swing.JFrame {
 		
 		
 		private void handImageMouseClicked(MouseEvent evt) {
+			if(VisualData.viewLateral){
+				if (VisualData.viewLPointCenter)
+					handImage.setCenter(new Point(evt.getX(),evt.getY()));
+				else
+					handImage.setRefer(new Point(evt.getX(),evt.getY()));
+				handImage.setImage();
+			}
 			if(StaticInitCircle.drawPC){
 				StaticInitCircle.DPCxC=evt.getX();
 				StaticInitCircle.DPCyC=evt.getY();
@@ -1797,6 +1844,14 @@ public class MainFrame extends javax.swing.JFrame {
 			if(evt.getModifiersEx()==4096){
 				StaticInitCircle.destinoOP = new Point(evt.getX(),evt.getY());
 			}
+			if(VisualData.viewLateral){
+				VisualData.viewLPoint=null;
+				VisualData.viewLPointCenter=false;
+				jPanelLateral.setImage(handImage.getImagesB(),handImage.getRefer(),handImage.getCenter());
+				if(ed!=null)
+					ed.resetDataset(jPanelLateral.getGraph(handImage.getIndex()));
+				
+			}
 			StaticInitCircle.indexMoveOP=-1;
 			handImage.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -1805,6 +1860,13 @@ public class MainFrame extends javax.swing.JFrame {
 			if(StaticInitCircle.drawPC){
 				StaticInitCircle.DPCxC = evt.getX();
 				StaticInitCircle.DPCyC = evt.getY();
+			}
+			if(VisualData.viewLateral){
+				if(handImage.contatinPoint(handImage.getCenter(),new Point(evt.getX(),evt.getY()))){
+					VisualData.viewLPointCenter=true;
+					
+				}
+				VisualData.viewLPoint = new Point(evt.getX(),evt.getY());
 			}
 			if((evt.getModifiersEx()==4096)||(evt.getModifiersEx()==2048)){
 				InitCircleOnScreen init = handImage.getInitCircle();
@@ -1834,6 +1896,16 @@ public class MainFrame extends javax.swing.JFrame {
 						StaticInitCircle.moveNormalOnePoint(evt, handImage);
 					}
 			}
+			if(VisualData.viewLateral && VisualData.viewLPoint!=null){
+				
+					if (VisualData.viewLPointCenter)
+						handImage.setCenter(new Point(evt.getX(),evt.getY()));
+					else
+						handImage.setRefer(new Point(evt.getX(),evt.getY()));
+					handImage.setImage();
+					
+				
+			}
 		}
 		
 		private void handImageMouseMoved(MouseEvent evt) {
@@ -1846,6 +1918,13 @@ public class MainFrame extends javax.swing.JFrame {
 
 				if(i!=-1)
 					handImage.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				else
+					handImage.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			}
+			if(VisualData.viewLateral){
+				if(handImage.containtPoint(new Point (evt.getX(),evt.getY()))){
+					handImage.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+				}
 				else
 					handImage.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
@@ -1867,4 +1946,38 @@ public class MainFrame extends javax.swing.JFrame {
 		private void jButtonSnakeActionPerformed(ActionEvent evt) {
 			jMenuItemEnlargeCircleSnakeActionPerformed(null);
 		}
+		
+		
+		private void jTabbedPane1MouseClicked(MouseEvent evt) {
+			if(jTabbedPane1.getSelectedIndex()==0)
+				handImage.setImage();
+			else
+				if(jTabbedPane1.getSelectedIndex()==2)
+					handImageFiltered.setImage();
+				else
+					if(jTabbedPane1.getSelectedIndex()==1){
+						if (VisualData.viewLateral){
+							jPanelLateral.setImage(handImage.getImagesB(),handImage.getRefer(),handImage.getCenter());
+							jPanelLateral.setImage();
+						}
+					}
+
+		}
+		private void viewLateralMenuItemActionPerformed(ActionEvent evt) {
+			
+			VisualData.viewLateral=jCheckBoxViewLateral.isSelected();
+			jMenuItemViewGraph.setEnabled(true);
+			jPanelLateral.setImage(handImage.getImagesB(),handImage.getRefer(),handImage.getCenter());
+			handImage.setImage();
+		}
+		private void jMenuItemViewGraphActionPerformed(ActionEvent evt) {
+			ed=new Distribucion(this,jPanelLateral.getGraph(handImage.getIndex()));
+			ed.setVisible(true);
+		}
+		
+		private void jButton1ActionPerformed(ActionEvent evt) {
+			Packages e= new Packages(this,this.handImage);
+			e.setVisible(true);
+		}
+
 }

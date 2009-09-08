@@ -35,6 +35,7 @@ import draw2D.InitCircleOnScreen;
 import draw2D.NormalOnScreen;
 import draw2D.filtering.MeanFilter;
 import draw2D.filtering.MedianFilter;
+import draw2D.snakes.Snakes;
 import draw3D.Line;
 
 
@@ -77,20 +78,22 @@ public class EnlargeSnakesDialog extends javax.swing.JDialog {
 	private JLabel jLabel3;
 	private JLabel jLabel4;
 	private JLabel jLabel5;
+	private JSpinner jSpinner3;
+	private JLabel jLabel8;
+	private JLabel jLabel7;
 	private JButton jButtonClean;
 	private JButton jButtonPreview;
-	private JButton jButtonDelete;
-	private JButton jButtonOpen;
 	private JPanel jPanel2;
 	private JLabel jLabel6;
-	private JPanel jPanel1;
 
 	private JSpinner jSpinner1;
 
 	private JSpinner jSpinner2;
 	private JLabel jLabel2;
 	private HandImage handImage;
-	private JButton jButton2;
+	private JSpinner jSpinner6;
+	private JSpinner jSpinner5;
+	private JSpinner jSpinner4;
 	private JButton jButtonOK;
 	private AllCirclesOnScreen allCircles;
 	
@@ -108,28 +111,28 @@ public class EnlargeSnakesDialog extends javax.swing.JDialog {
 			{
 				jLabel1 = new JLabel();
 				getContentPane().add(jLabel1);
-				jLabel1.setText("Max. Distance: ");
+				jLabel1.setText("Strech:");
 				jLabel1.setBounds(12, 23, 78, 16);
 			}
 			{
 				jSpinner1 = new JSpinner();
 				getContentPane().add(jSpinner1);
-				jSpinner1.setValue(ImagesData.MAX_DISTANCE);
-				jSpinner1.setBounds(120, 21, 39, 19);
+				jSpinner1.setValue(Snakes.BN_strech);
+				jSpinner1.setBounds(64, 21, 40, 20);
 							}
 			{
 				jLabel2 = new JLabel();
 				getContentPane().add(jLabel2);
-				jLabel2.setText("Tolerance Distance: ");
-				jLabel2.setBounds(12, 43, 111, 40);
+				jLabel2.setText("Bend:");
+				jLabel2.setBounds(12, 46, 111, 21);
 			}
 			{
  
 					
 				jSpinner2 = new JSpinner();
 				getContentPane().add(jSpinner2);
-				jSpinner2.setValue(ImagesData.MAX_DISTANCE_NEIG);
-				jSpinner2.setBounds(120, 53, 39, 19);
+				jSpinner2.setValue(Snakes.BN_bend);
+				jSpinner2.setBounds(64, 45, 40, 20);
 			}
 			{
 				normalColorPanel = new JPanel();
@@ -180,12 +183,6 @@ public class EnlargeSnakesDialog extends javax.swing.JDialog {
 				});
 			}
 			{
-				jPanel1 = new JPanel();
-				getContentPane().add(jPanel1);
-				jPanel1.setBounds(2, 11, 188, 98);
-				jPanel1.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
-			}
-			{
 				jLabel3 = new JLabel();
 				getContentPane().add(jLabel3);
 				jLabel3.setText("Enlarge Color:");
@@ -216,34 +213,10 @@ public class EnlargeSnakesDialog extends javax.swing.JDialog {
 				jPanel2.setBounds(200, 11, 121, 120);
 			}
 			{
-				jButtonOpen = new JButton();
-				getContentPane().add(jButtonOpen);
-				jButtonOpen.setText("Open Circle");
-				jButtonOpen.setBounds(204, 142, 112, 23);
-				jButtonOpen.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/opencircle.gif")));
-				jButtonOpen.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent evt) {
-						jButtonOpenMouseClicked(evt);
-					}
-				});
-			}
-			{
-				jButtonDelete = new JButton();
-				getContentPane().add(jButtonDelete);
-				jButtonDelete.setText("DeleteCircle");
-				jButtonDelete.setBounds(204, 204, 112, 23);
-				jButtonDelete.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/deleteCircle.gif")));
-				jButtonDelete.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent evt) {
-						jButtonDeleteMouseClicked(evt);
-					}
-				});
-			}
-			{
 				jButtonPreview = new JButton();
 				getContentPane().add(jButtonPreview);
 				jButtonPreview.setText("Preview");
-				jButtonPreview.setBounds(22, 142, 71, 23);
+				jButtonPreview.setBounds(10, 190, 71, 23);
 				jButtonPreview.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent evt) {
 						jButtonPreviewMouseClicked(evt);
@@ -254,7 +227,7 @@ public class EnlargeSnakesDialog extends javax.swing.JDialog {
 				jButtonClean = new JButton();
 				getContentPane().add(jButtonClean);
 				jButtonClean.setText("Clean");
-				jButtonClean.setBounds(103, 142, 59, 23);
+				jButtonClean.setBounds(91, 200, 59, 23);
 				jButtonClean.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent evt) {
 						jButtonCleanMouseClicked(evt);
@@ -264,7 +237,7 @@ public class EnlargeSnakesDialog extends javax.swing.JDialog {
 			{
 				jButtonOK = new JButton();
 				getContentPane().add(jButtonOK);
-				jButtonOK.setBounds(73, 171, 50, 38);
+				jButtonOK.setBounds(233, 169, 50, 38);
 				jButtonOK.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/forward.gif")));
 				jButtonOK.addMouseListener(new MouseAdapter() {
 					public void mouseClicked(MouseEvent evt) {
@@ -273,16 +246,46 @@ public class EnlargeSnakesDialog extends javax.swing.JDialog {
 				});
 			}
 			{
-				jButton2 = new JButton();
-				getContentPane().add(jButton2);
-				jButton2.setText("Save Circle");
-				jButton2.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/savecircle.gif")));
-				jButton2.setBounds(204, 175, 112, 23);
-				jButton2.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent evt) {
-						jButton2MouseClicked(evt);
-					}
-				});
+				jLabel7 = new JLabel();
+				getContentPane().add(jLabel7);
+				jLabel7.setText("Inflate:");
+				jLabel7.setBounds(10, 73, 53, 14);
+			}
+			{
+				jLabel8 = new JLabel();
+				getContentPane().add(jLabel8);
+				jLabel8.setText("Image:");
+				jLabel8.setBounds(10, 98, 34, 14);
+			}
+			{
+				
+				jSpinner3 = new JSpinner();
+				getContentPane().add(jSpinner3);
+				jSpinner3.setValue(Snakes.BN_inflate);
+				jSpinner3.setBounds(63, 70, 40, 20);
+			}
+			{
+				
+				jSpinner4 = new JSpinner();
+				getContentPane().add(jSpinner4);
+				jSpinner4.setValue(Snakes.BN_image);
+				jSpinner4.setBounds(63, 95, 40, 20);
+			}
+			{
+				
+				jSpinner5 = new JSpinner();
+				getContentPane().add(jSpinner5);
+			
+				jSpinner5.setValue(Snakes.BN_numSteps);
+				jSpinner5.setBounds(63, 126, 40, 21);
+			}
+			{
+				
+				jSpinner6 = new JSpinner();
+				getContentPane().add(jSpinner6);
+				int a = (int) (Snakes.BN_timeStep*1000);
+				jSpinner6.setValue(a);
+				jSpinner6.setBounds(63, 158, 40, 21);
 			}
 			this.setResizable(false);
 			this.setLocation(850, 100);
@@ -336,13 +339,15 @@ public class EnlargeSnakesDialog extends javax.swing.JDialog {
 	}
 	
 	private void jButtonPreviewMouseClicked(MouseEvent evt) {
-		ImagesData.MAX_DISTANCE=((Integer) jSpinner1.getValue());
-		ImagesData.MAX_DISTANCE_NEIG=((Integer) jSpinner2.getValue());
-		
-		handImage.setImage();
-		
-		handImage.previewCircle(handImage.getIndex(),initColorPanel.getBackground(),enlargeColorPanel.getBackground(),reduceColorPanel.getBackground(),normalColorPanel.getBackground());
-		
+		Snakes.BN_strech = ((Integer) jSpinner1.getValue());
+		Snakes.BN_bend = ((Integer) jSpinner2.getValue());
+		Snakes.BN_inflate = ((Integer) jSpinner3.getValue());
+		Snakes.BN_image= ((Integer) jSpinner4.getValue());
+		Snakes.BN_numSteps= ((Integer) jSpinner5.getValue());
+		Snakes.BN_timeStep= ((Integer) jSpinner6.getValue())/1000f;
+		System.out.println(Snakes.BN_timeStep);
+		Snakes s = new Snakes(handImage,handImage.getImage());
+		s.start();
 	}
 	
 	private void jButtonCleanMouseClicked(MouseEvent evt) {
@@ -350,32 +355,9 @@ public class EnlargeSnakesDialog extends javax.swing.JDialog {
 	}
 	
 	private void jButtonOKMouseClicked(MouseEvent evt) {
-		handImage.enlargeCircle(initColorPanel.getBackground(),enlargeColorPanel.getBackground(),reduceColorPanel.getBackground(),normalColorPanel.getBackground());
-		handImage.nextImage();
-		handImage.drawInitCircle();
+		
 	}
 	
-	private void jButton2MouseClicked(MouseEvent evt) {
-		JFileChooser filechooser = new JFileChooser(new File("c:\\"));
-		filechooser.setMultiSelectionEnabled(false);
-		FFilter crlFilter; 
-		File file;
-		crlFilter = new FFilter("crl", "Circle Files");
-		filechooser.addChoosableFileFilter(crlFilter);
-		filechooser.setAcceptAllFileFilterUsed(true);
-		filechooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		if (filechooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-			file=filechooser.getSelectedFile();
-			if(file.exists()){
-				int response=JOptionPane.showConfirmDialog(null,"Overwrite existing file?","Confirm Overwrite",JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
-				if(response==JOptionPane.CANCEL_OPTION){
-					return;
-				}
-			}
-			SaveFile sv=new SaveFile(file.getAbsolutePath());
-			sv.save(handImage.getInitCircle().getCirclePoints());
-		}
-	}
 	
 
 

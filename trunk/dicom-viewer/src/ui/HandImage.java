@@ -37,19 +37,44 @@ public class HandImage extends JPanel{
  private Graphics grafBuff;
  private Vector<Point> seeds = new Vector<Point>();
  private Vector<BufferedImage> imagesB = new Vector<BufferedImage>();
+ private Vector<BufferedImage> allImagesB = new Vector<BufferedImage>();
  
  private InitCircleOnScreen initCircle = new InitCircleOnScreen();
  private AllCirclesOnScreen allCircles = new AllCirclesOnScreen();
 
-
- 
  private int index;
  private BufferedImage image = null;
  
+ private boolean workPackage=false;
+ private int cantPackage =1;
+ private int numPackage =1;
+ public void startWorkPackage(int p){
+	 workPackage=true;
+	 cantPackage = Mesh.endSequence - Mesh.startSequence;
+	 numPackage = p;
+ }
+ 
+ public void stopWorkPackage(){
+	 workPackage=false;
+ }
 
+ public BufferedImage getFromAllImagesB(int index) {
+		return allImagesB.get(index);
+		
+	}
+ public int getSizeAllImagesB() {
+		return allImagesB.size();
+		
+	}
 
-
-
+ public void setImagesB(Vector<BufferedImage> imagesB) {
+	this.imagesB = imagesB;
+	
+	
+}
+ public Vector<BufferedImage> getImagesB() {
+	return imagesB;
+}
  public void setCirclePoints(Vector<Point> circlePoints) {
 	 this.initCircle = new InitCircleOnScreen(circlePoints,VisualData.initColor);
 
@@ -66,12 +91,16 @@ public class HandImage extends JPanel{
  
  public HandImage(Vector<BufferedImage> imagesB) {
 	 this.imagesB=imagesB;
+	 this.allImagesB=imagesB;
+	 
+		
+		
+		
 	 index=0;
 	 setImage();
 }
  public void deleteFilteredImages() {
-		 
-		imagesB.removeAllElements();
+	imagesB.removeAllElements();
 }
  public void clearSeeds(){
 	 seeds = new Vector<Point>();
@@ -130,6 +159,88 @@ private void setInic(){
 	   grafBuff.drawRect(0, 0, d.width-1, d.height-1);
  }
 
+private Point center = new Point(256,256);
+private Point refer = new Point (256,2);
+public void setRefer(Point refer) {
+	this.refer = refer;
+}
+private void drawLateral(Graphics g){
+	if (VisualData.viewLateral){
+		
+		rectaSimple2(refer.x, refer.y, center.x*2-refer.x, center.y*2-refer.y,g);
+		
+	}
+}
+
+public Point getRefer() {
+	return refer;
+}
+public Point getCenter() {
+	return center;
+}
+public void setCenter(Point center) {
+	this.center = center;
+}
+public boolean contatinPoint(Point o,Point p){
+	if((o.x < (p.x+3))&&(o.x > (p.x-3)))
+		if((o.y < (p.y+3))&&(o.y > (p.y-3)))
+			return true;
+	return false;
+}
+public boolean containtPoint(Point p){
+	int x1 = center.x*2-refer.x;
+	int y1 = center.y*2-refer.y;
+	
+	if(contatinPoint(center, p))
+		return true;
+	else
+		if(contatinPoint(refer, p))
+			return true;
+		else
+			if(contatinPoint(new Point(x1,y1), p))
+				return true;
+	return false;
+}
+public void rectaSimple2(int x0, int y0, int x1, int y1, Graphics g)
+{   g.setColor(Color.PINK);
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+    
+    g.fillRect(x0-3, y0-3, 7, 7);
+ 
+    g.fillRect(x1-3, y1-3, 7, 7);
+    
+    g.drawOval(center.x-3, center.y-3, 7, 7);
+    
+    g.drawLine( x0, y0, x0, y0);
+    if (Math.abs(dx) > Math.abs(dy)) {          // pendiente < 1
+        float m = (float) dy / (float) dx;
+        float b = y0 - m*x0;
+        if(dx<0)
+            dx =  -1;
+        else
+            dx =  1;
+        while (x0 != x1) {
+            x0 += dx;
+            y0 = Math.round(m*x0 + b);
+            g.drawLine( x0, y0, x0, y0);
+        }
+    } else
+    if (dy != 0) {                              // slope >= 1
+        float m = (float) dx / (float) dy;      // compute slope
+        float b = x0 - m*y0;
+        if(dy<0)
+            dy =  -1;
+        else
+            dy =  1;
+        while (y0 != y1) {
+            y0 += dy;
+            x0 = Math.round(m*y0 + b);
+            g.drawLine( x0, y0, x0, y0);
+        }
+    }
+}
+
 private void drawSeeds(Graphics g){
 	if (VisualData.viewSeeds){
 		for (int i = 0; i < seeds.size(); i++) {
@@ -152,8 +263,14 @@ public void update (Graphics g){
 	grafBuff.setColor(Color.BLACK);
 	g.drawImage(image, 0, 0, this);
 	drawSeeds(g);
-	allCircles.draw(g, index);
+	drawLateral(g);
+	int temp=index;
+	if(workPackage){
+		temp = (Mesh.startSequence + numPackage+(temp*cantPackage));
+	}
+	allCircles.draw(g, temp);
 	drawInitCircle();
+	drawLateral(g);
 
 }
 
@@ -180,7 +297,13 @@ public void setImage() {
 		}
 	drawSeeds(this.getGraphics());
 	drawInitCircle();
-	allCircles.draw(this.getGraphics(), index);
+	int temp=index;
+	if(workPackage){
+		temp = (Mesh.startSequence + numPackage+(temp*cantPackage));
+	}
+	
+	allCircles.draw(this.getGraphics(), temp);//para mostrar con paquetes recalcular este index
+	drawLateral(this.getGraphics());
 
 }
 
@@ -242,12 +365,35 @@ public void enlargeCircleForAllWithReduce(){
 		this.initCircle.setColor(VisualData.initColor);
 		
 		
-		allCircles.add(enl,redu,this.initCircle,norm);
+		allCircles.add(enl,redu,this.initCircle,norm,i);
 		
 	}
 	this.setImage();
 }
 
+private NormalOnScreen getNormalOnScreenSnake(CircleOnScreen init, CircleOnScreen enlarge) {
+	 Vector<Line> normals = new Vector<Line>();
+	 Vector<Point> in = init.getCirclePoints();
+	 Vector<Point> en = enlarge.getCirclePoints();
+
+	 for(int i=0;i<enlarge.getCantPoints();i++){
+		 normals.add(new Line(in.get(i),en.get(i))); 
+	 }
+	 return new NormalOnScreen(normals);
+}
+
+public void addToAllCircle(CircleOnScreen enl,CircleOnScreen redu){
+	
+	NormalOnScreen norm = getNormalOnScreenSnake(this.initCircle, enl);
+	norm.setColor(VisualData.normal);
+	
+	int temp=index;
+	if(workPackage){
+		temp = (Mesh.startSequence + numPackage+(temp*cantPackage));
+	}
+	
+	allCircles.add(enl,redu,this.initCircle,norm,temp);
+}
 public void enlargeCircleForAll(){
 	for(int i=0;i<imagesB.size();i++){
 		EnlargeCircle e = new EnlargeCircle(this,1,imagesB.get(i),this.initCircle);
@@ -261,11 +407,9 @@ public void enlargeCircleForAll(){
 		NormalOnScreen norm = getNormalOnScreen(this.initCircle, enl);
 		norm.setColor(VisualData.normal);
 		
-		
 		this.initCircle.setColor(VisualData.initColor);
 		
-		
-		allCircles.add(enl,redu,this.initCircle,norm);
+		allCircles.add(enl,redu,this.initCircle,norm,i);
 		
 	}
 	this.setImage();
@@ -298,7 +442,12 @@ public void enlargeCircle(Color initColor,Color enlargeColor,Color reduceColor,C
 	NormalOnScreen norm = getNormalOnScreen(init, enl);
 	norm.setColor(normal);
 	
-	allCircles.add(enl,redu,init,norm,index );
+	int temp=index;
+	if(workPackage){
+		temp = (Mesh.startSequence + numPackage+(temp*cantPackage));
+	}
+	
+	allCircles.add(enl,redu,init,norm,temp );
 	
 
 	
@@ -354,14 +503,19 @@ public void setCircleAllPontsEnlarge(
 public void setInitCircleColor(Color background) {
 	VisualData.initColor=background;
 	this.initCircle.setColor(VisualData.initColor);
-	
-	
 }
 
 public void setCursor(int crosshairCursor) {
 	this.setCursor(crosshairCursor);
 	
 }
+public void reloadImageB() {
+	this.imagesB=this.allImagesB;
+	this.setImage();
+	
+}
+
+
 
 
 }

@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Vector;
 
+import data.ImagesData;
 import data.VisualData;
 import draw3D.Line;
 
@@ -33,7 +34,9 @@ public class AllCirclesOnScreen {
 				circleAllPointsReduce.get(index).draw(g);
 				circleAllPointsInit.get(index).draw(g);
 				
-			}catch(Exception e){}
+			}catch(Exception e){
+				
+			}
 		}
 	 }
 	 public CircleOnScreen getRecudeCircle(int i){
@@ -41,20 +44,23 @@ public class AllCirclesOnScreen {
 	 }
 
 	 public void add(CircleOnScreen enl, CircleOnScreen redu,InitCircleOnScreen initCircle, NormalOnScreen norm, int index) {
-		 try{
+		
+		 if((size()==0)&&(ImagesData.imagesB.size()>0)){
+		 
+			 for(int i = 0;i<ImagesData.imagesB.size();i++)
+				 this.add(null, null, null, null);
+		 }
 		 circleAllPointsEnlarge.remove(index);
 		 circleAllPointsReduce.remove(index);
 		 circleAllPointsInit.remove(index);
 		 circleAllNormales.remove(index);
-		 
-		 
-		 }catch(Exception e){}
-		 try{
+
 		 circleAllPointsEnlarge.add(index,enl);
 		 circleAllPointsReduce.add(index,redu);
 		 circleAllPointsInit.add(index,initCircle);
 		 circleAllNormales.add(index,norm);
-		 }catch(Exception e){}
+		 
+		 
 	}
 	 
 	 public void add(CircleOnScreen enl, CircleOnScreen redu,InitCircleOnScreen initCircle, NormalOnScreen norm) {

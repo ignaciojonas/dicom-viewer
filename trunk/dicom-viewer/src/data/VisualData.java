@@ -1,6 +1,7 @@
 package data;
 
 import java.awt.Color;
+import java.awt.Point;
 
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
@@ -23,6 +24,11 @@ public class VisualData {
 	public static  JTable jTable1=null;
 	public static  boolean viewDicomProperties = false;
 	public static  boolean viewSeeds = false;
+	
+	public static  boolean viewLateral = false;
+	public static  boolean viewLPointCenter = false;
+	public static  Point viewLPoint=null;
+	
 	public static  boolean viewCircle = true;
 	public static boolean viewCircleAll = true;
 	public static int sliderBarValue = 100;

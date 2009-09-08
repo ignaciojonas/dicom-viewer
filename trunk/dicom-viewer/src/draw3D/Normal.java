@@ -2,9 +2,11 @@ package draw3D;
 
 import java.awt.Point;
 
+import draw2D.snakes.PointF;
+
 public class Normal {
-private double x;
-private double y;
+public double x;
+public double y;
 
 public Normal(double x, double y) {
 	super();
@@ -16,6 +18,12 @@ public Point getNormalAdd(Point p, int avance){
 	double xx=p.x+(x*avance);
 	double yy=p.y+(y*avance);
 	return new Point((int)Math.round(xx),(int)Math.round(yy));
+}
+
+public PointF getNormalAdd(PointF p, int avance){ 
+	float xx=(float) (p.x+(x*avance));
+	float yy=(float) (p.y+(y*avance));
+	return new PointF(xx,yy);
 }
 
 public Point getNormalSubtract(Point p, int avance){ 

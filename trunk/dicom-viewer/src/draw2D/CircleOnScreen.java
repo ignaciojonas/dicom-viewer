@@ -16,6 +16,9 @@ public class CircleOnScreen {
 		this.color=color;
 	}
 	 
+	 public Point getPoint(int index){
+		 return circlePoints.get(index);
+	 }
 	 public CircleOnScreen() {}
 	 
 	 public void setColor(Color color) {
